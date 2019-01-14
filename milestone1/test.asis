@@ -1,4 +1,4 @@
 HTTP/1.1 200 OK
-content-type: text/plain
+Content-Type: text/plain
 
 Serveren fungerer :D
