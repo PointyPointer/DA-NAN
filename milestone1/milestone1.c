@@ -36,7 +36,7 @@ int main(){
 	char *httpMethod;
 	char *filePath;
 
-	err = fopen("error.log", "a");
+	err = fopen("/var/log/web_error.log", "a");
 	dup2(fileno(err), 2);
 	fclose(err);
 
@@ -162,7 +162,7 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	strcpy(filePath, "/home/pointy/skole/nan/DA-NAN/milestone1");
+	strcpy(filePath, "/var/www/");
 
 	// method of splitting string
 	strcpy(httpMethod, token);
