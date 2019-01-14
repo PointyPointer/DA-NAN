@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <time.h>
 
 #define QUEUE_SIZE 20
 #define PORT 80
@@ -13,48 +17,53 @@
 
 int socketSetup();
 
-int daemonize();
-
-// int writeHeader(int, int);
+int deamonize();
 
 int writeBody(int, char*);
 
-// char* getContentType();
+char* getTime();
+
+int parseRequest(int, char*, char*);
+
 
 
 int main(){
 	// Declarations
 	int sd, client_sd;
 	char buf[GET_HEAD_SIZE];
-	FILE *err;
+	FILE* err;
 
 	char *httpMethod;
 	char *filePath;
 
 	err = fopen("error.log", "a");
+	dup2(fileno(err), 2);
+	fclose(err);
 
 	// initialation of socket and binding
 	sd = socketSetup();
 
 	// Turn the process to a daemon
-	//daemonize();
+	deamonize();
 
 	listen(sd, QUEUE_SIZE);
 	// Main loop
 	while(1){
 		client_sd = accept(sd, NULL, NULL);		
-
 		// Child
 		if(fork()==0){
 			httpMethod = malloc(7);
+			filePath = malloc(1000);
 			// Read request
-			//parseRequest(client_sd, )
+			
+			parseRequest(client_sd, httpMethod, filePath);
 			// read(, buf, GET_HEAD_SIZE);
 
 			
 			// Respond
 			//writeHeader(client_sd, 200)
-			writeBody(client_sd, "test.asis");
+			writeBody(client_sd, filePath);
+
 
 			// terminate child
 			shutdown(client_sd, SHUT_RDWR);
@@ -72,7 +81,7 @@ int socketSetup(){
 	int sd;
 	struct sockaddr_in lok_adr;
 
-	socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);	
+	sd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);	
 	// Free port after termination for faster debuging
 	setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int));
 	lok_adr.sin_family = AF_INET;
@@ -80,7 +89,7 @@ int socketSetup(){
 	lok_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	if ( 0!=bind(sd, (struct sockaddr *)&lok_adr, sizeof(lok_adr)) ){
-		// Log error
+		perror(getTime());
 		exit(1);		
 	}
 
@@ -98,7 +107,8 @@ int deamonize(){
 	setsid(); // Create session, free from tty
 	signal(SIGTTOU, SIG_IGN); // 
 	signal(SIGTTIN, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN); 
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGCHLD, SIG_IGN);
 
 	if(fork()){
 		exit(0); //sessionleader dies, cannot obtain tty
@@ -110,13 +120,7 @@ int deamonize(){
 	return 0;
 }
 
-// int write_header(int sd, int status){
-// 	write(sd, "HTTP/1.1 200 OK\nContent-Type: text/plain\n\n", 42);
-
-// 	return 0;
-// }
-
-int write_body(int sd, char* filePath){
+int writeBody(int sd, char* filePath){
 	FILE *fp;
 	int buffSize = 1024;
 	char* buff[buffSize];
@@ -125,20 +129,45 @@ int write_body(int sd, char* filePath){
 	fp = fopen(filePath, "r");
 
 	if(fp==0){
+		perror(getTime());
 		dprintf(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found");
 	}
 	else{
+		perror(getTime());
+
 		l = 1;
-		while(l){
-			l = fread(buff, 1, buffSize, sd);
-			fwrite(buff, 1, l, sd);			
+		while (l = fread(buff, 1, 1024, fp)) {
+	 		write(sd, buff, l);	
 		}
 
 	}
 
 }
 
-// char* getContentType(){
+char* getTime(){
+	time_t rawtime;
+	struct tm * timeinfo;
 
-// 	return 
-// }
+	time ( &rawtime );
+	timeinfo = localtime ( &rawtime );
+	return strtok(asctime(timeinfo), "\n");
+}
+
+int parseRequest(int sd, char* httpMethod, char* filePath){
+	char* buff;
+	char* token;
+
+	buff = malloc(5000);
+
+	read(sd, buff, 5000);
+	token = strtok(buff, " ");	
+
+	strcpy(filePath, "/home/pointy/skole/nan/DA-NAN/milestone1");
+
+	// method of splitting string
+	strcpy(httpMethod, token);
+	strcat(filePath, strtok(NULL, " "));
+
+
+	return 0;
+}
