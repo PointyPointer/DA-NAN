@@ -102,6 +102,7 @@ int socketSetup(){
 int deamonize(){
 
 	if(fork()){
+		raise(SIGSTOP);
 		exit(0); //parent dies
 	}
 	setsid(); // Create session, free from tty

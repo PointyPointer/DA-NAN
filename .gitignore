@@ -38,7 +38,7 @@
 
 # Debug files
 *.dSYM/
-*.su
+*.suweb
 *.idb
 *.pdb
 
@@ -53,5 +53,6 @@ dkms.conf
 
 # personal
 *.log
-web
-webserver
+*/*.log
+*/web
+*/static_web
