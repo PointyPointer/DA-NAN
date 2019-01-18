@@ -16,7 +16,7 @@
 #define GET_HEAD_SIZE 2048
 #define UID 1000
 #define GID 1000
-#define ROOTDIR "/home/pointy/code/DA-NAN/milestone2"
+#define ROOTDIR "/"
 
 int socketSetup();
 
@@ -30,7 +30,7 @@ int parseRequest(int, char*, char*);
 
 int isDir(char*);
 
-char* getMime(char*);
+int getMime(char*, char*);
 
 
 
@@ -47,7 +47,8 @@ int main(){
 	err = fopen("/var/log/web_error.log", "a");
 	dup2(fileno(err), 2);
 	fclose(err);
-
+	
+	chroot("/var/www");
 	// initialation of socket and binding
 	sd = socketSetup();
 
@@ -104,6 +105,7 @@ int socketSetup(){
 int deamonize(){
 
 	if(fork()){
+		raise(SIGSTOP);
 		exit(0); //parent dies
 	}
 	setsid(); // Create session, free from tty
@@ -124,14 +126,14 @@ int deamonize(){
 
 int respond(int sd, char* filePath){
 	int buffSize = 1024;
-	char* buff[buffSize];
+	char buff[buffSize];
 	int l;
 
 	if(isDir(filePath)){
 		kataloglisting(filePath);
 	}
 
-	fp = fopen(filePath, "r");
+	FILE* fp = fopen(filePath, "r");
 
 	if(fp==0){
 		perror(getTime());
@@ -142,7 +144,7 @@ int respond(int sd, char* filePath){
 		write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 		l = getMime(filePath, buff);
 		write(sd, buff, l);
-		write(sd, '\n\n', 2);
+		write(sd, "\n\n", 3);
 
 		// Body
 		while (l = fread(buff, 1, 1024, fp)) {
@@ -189,8 +191,7 @@ int isDir(char* path){
 	i = 0;
 	lastChar = '/';
 	while(path[i] != '\0'){
-		lastChar = path[i];
-	}
+		lastChar = path[i];}
 
 	if(lastChar == '/')
 		return 0;
@@ -198,11 +199,29 @@ int isDir(char* path){
 		return 1;
 
 }
-int getMime(char* filePath, char* type){
+int getMime(char* filePath, char* buff){
+
+	size_t len = 1024;
+	ssize_t read;
+	
 	// Find file extension
-
+	char *ext = strrchr(filePath, (int)'.');
+	if (ext == NULL) {
+		return -1;
+	}
+	*ext ++;
+	
 	// Search after ext in mime file
+	FILE* mime = fopen("mime.type", "r");
+	if (mime == NULL) {
+		return -2;
+	}
 
-	// Return length of content-type
-
+	while ((read = getline(&buff,&len, mime)) != -1) {
+		if (strstr(buff, ext)) {
+			int sub = strlen(strchr(buff, (int)'\t'));
+			return read - sub;			
+		}
+	}
+	return -3;
 }
