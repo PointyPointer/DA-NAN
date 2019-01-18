@@ -3,7 +3,7 @@ FROM scratch
 COPY web /web
 COPY dumb-init /dumb-init
 
-COPY test.asis /var/www/test.asis
+COPY www/* /var/www/
 COPY error.log /var/log/web_error.log
 
 EXPOSE 80

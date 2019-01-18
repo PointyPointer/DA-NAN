@@ -34,7 +34,8 @@ int getMime(char*, char*);
 
 
 
-int main(){
+int main(int argc, char* argv[]){
+
 	// Declarations
 	int sd, client_sd;
 	char buf[GET_HEAD_SIZE];
@@ -43,12 +44,24 @@ int main(){
 
 	char *httpMethod;
 	char *filePath;
+	char *logPath = "/var/log/web_error.log";
+	char *newRootDir = "/var/www";
 
-	err = fopen("/var/log/web_error.log", "a");
+	// argument handling
+	for (int i = 0; i<argc; i++){
+		if (argv[i] == "--log-file") {
+			logPath = argv[i++];
+		} else if(argv[i] == "--chroot-dir") {
+			newRootDir = argv[i++];
+		}
+	}
+
+	// error stream to log
+	err = fopen(logPath, "a");
 	dup2(fileno(err), 2);
 	fclose(err);
 	
-	chroot("/var/www");
+	chroot(newRootDir);
 	// initialation of socket and binding
 	sd = socketSetup();
 
@@ -137,15 +150,23 @@ int respond(int sd, char* filePath){
 
 	if(fp==0){
 		perror(getTime());
-		write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
+		write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 64);
 	}
 	else{
 		// Header
-		write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 		l = getMime(filePath, buff);
-		if(l < 0) {
+		// error handling
+		if(l == -1) {
 			perror(getTime());
-			write(sd, "HTTP/1.1 404 Not Found\nContent-Type: ", 30);
+			write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 101);
+		} else if (l == -2) {
+			perror(getTime());
+			write(sd, "HTTP/1.1 510 Not Extended\nContent-Type: text/plain\n\nFurther extentions required", 80);
+		} else if (l == -3) {
+			perror(getTime());
+			write(sd, "HTTP/1.1 415 Unsupported Media Type\nContent-Type: text/plain\n\nMedia type not supported", 96);
+		} else {
+			write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 		}
 		write(sd, buff, l);
 		write(sd, "\n\n", 3);
