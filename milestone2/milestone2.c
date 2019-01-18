@@ -143,6 +143,10 @@ int respond(int sd, char* filePath){
 		// Header
 		write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 		l = getMime(filePath, buff);
+		if(l < 0) {
+			perror(getTime());
+			write(sd, "HTTP/1.1 404 Not Found\nContent-Type: ", 30);
+		}
 		write(sd, buff, l);
 		write(sd, "\n\n", 3);
 
