@@ -16,7 +16,6 @@
 #define GET_HEAD_SIZE 2048
 #define UID 1000
 #define GID 1000
-#define ROOTDIR "/home/pointy/code/DA-NAN/milestone2"
 
 int socketSetup();
 
@@ -30,7 +29,7 @@ int parseRequest(int, char*, char*);
 
 int isDir(char*);
 
-char* getMime(char*);
+int getMime(char*, char*);
 
 
 
@@ -47,6 +46,11 @@ int main(){
 	err = fopen("/var/log/web_error.log", "a");
 	dup2(fileno(err), 2);
 	fclose(err);
+
+	if(chroot("/var/www")){
+		perror(getTime());
+		exit(1);
+	}
 
 	// initialation of socket and binding
 	sd = socketSetup();
@@ -104,6 +108,7 @@ int socketSetup(){
 int deamonize(){
 
 	if(fork()){
+		//raise(SIGSTOP);
 		exit(0); //parent dies
 	}
 	setsid(); // Create session, free from tty
@@ -124,11 +129,12 @@ int deamonize(){
 
 int respond(int sd, char* filePath){
 	int buffSize = 1024;
-	char* buff[buffSize];
+	char buff[buffSize];
 	int l;
+	FILE *fp;
 
 	if(isDir(filePath)){
-		kataloglisting(filePath);
+		kataloglisting(sd, filePath);
 	}
 
 	fp = fopen(filePath, "r");
@@ -142,7 +148,7 @@ int respond(int sd, char* filePath){
 		write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 		l = getMime(filePath, buff);
 		write(sd, buff, l);
-		write(sd, '\n\n', 2);
+		write(sd, "\n\n", 2);
 
 		// Body
 		while (l = fread(buff, 1, 1024, fp)) {
@@ -171,11 +177,13 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	strcpy(filePath, ROOTDIR);
+	//strcpy(filePath, "/");
 
 	// method of splitting string
 	strcpy(httpMethod, token);
-	strcat(filePath, strtok(NULL, " "));
+	strcpy(filePath, strtok(NULL, " "));
+
+	free(buff);
 
 
 	return 0;

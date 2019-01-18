@@ -40,6 +40,11 @@ int main(){
 	dup2(fileno(err), 2);
 	fclose(err);
 
+	if(chroot("/var/www")){
+		perror(getTime());
+		exit(1);
+	}
+
 	// initialation of socket and binding
 	sd = socketSetup();
 
@@ -169,6 +174,7 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	strcpy(httpMethod, token);
 	strcat(filePath, strtok(NULL, " "));
 
+	free(buff);
 
 	return 0;
 }
