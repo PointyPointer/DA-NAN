@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <time.h>
 
+#include "katalog.h"
+
 #define QUEUE_SIZE 20
 #define PORT 80
 #define GET_HEAD_SIZE 2048
@@ -39,6 +41,8 @@ int main(){
 	err = fopen("/var/log/web_error.log", "a");
 	dup2(fileno(err), 2);
 	fclose(err);
+
+	chroot("/var/www");
 
 	// initialation of socket and binding
 	sd = socketSetup();
@@ -133,7 +137,7 @@ int writeBody(int sd, char* filePath){
 		dprintf(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found");
 	}
 	else{
-		perror(getTime());
+		kataloglisting()
 
 		l = 1;
 		while (l = fread(buff, 1, 1024, fp)) {

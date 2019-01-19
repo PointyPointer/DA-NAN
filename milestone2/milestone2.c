@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-#include "katalog.h"
+#include "dir.h" // void writeDirList(int sd, char *filsti)
 
 #define QUEUE_SIZE 20
 #define PORT 80
@@ -126,30 +126,35 @@ int respond(int sd, char* filePath){
 	int buffSize = 1024;
 	char* buff[buffSize];
 	int l;
+	FILE* fp;
 
 	if(isDir(filePath)){
-		kataloglisting(filePath);
+		writeDirList(sd, filePath);
 	}
 
-	fp = fopen(filePath, "r");
-
-	if(fp==0){
-		perror(getTime());
-		write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
-	}
 	else{
-		// Header
-		write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
-		l = getMime(filePath, buff);
-		write(sd, buff, l);
-		write(sd, '\n\n', 2);
+		fp = fopen(filePath, "r");
 
-		// Body
-		while (l = fread(buff, 1, 1024, fp)) {
-	 		write(sd, buff, l);	
+		if(fp==0){
+			perror(getTime());
+			write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
+		}
+		else{
+			// Header
+			write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
+			l = getMime(filePath, buff);
+			write(sd, buff, l);
+			write(sd, '\n\n', 2);
+
+			// Body
+			while (l = fread(buff, 1, 1024, fp)) {
+		 		write(sd, buff, l);	
+			}
+
 		}
 
 	}
+
 
 }
 
