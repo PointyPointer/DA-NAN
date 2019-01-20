@@ -22,7 +22,7 @@ int socketSetup();
 
 int deamonize();
 
-int respond(int, char*);
+int respond(int, char*, FILE*);
 
 char* getTime();
 
@@ -30,7 +30,7 @@ int parseRequest(int, char*, char*);
 
 int isDir(char*);
 
-int getMime(char*, char*);
+int getMime(char*, char*, FILE*);
 
 
 
@@ -39,7 +39,8 @@ int main(int argc, char* argv[]){
 	// Declarations
 	int sd, client_sd;
 	char buf[GET_HEAD_SIZE];
-	FILE *err;
+	FILE* err;
+	FILE* mime;
 
 	char *httpMethod;
 	char *filePath;
@@ -61,8 +62,11 @@ int main(int argc, char* argv[]){
 	dup2(fileno(err), 2);
 	fclose(err);
 
+	mime = fopen("/etc/mime.types", "r");
+
+
 	
-	chroot("/var/www");
+	chroot("/var/www/");
 
 	// initialation of socket and binding
 	sd = socketSetup();
@@ -85,7 +89,7 @@ int main(int argc, char* argv[]){
 			
 			parseRequest(client_sd, httpMethod, filePath);
 
-			respond(client_sd, filePath);
+			respond(client_sd, filePath, mime);
 
 			// terminate child
 			shutdown(client_sd, SHUT_RDWR);
@@ -143,56 +147,52 @@ int deamonize(){
 	return 0;
 }
 
-int respond(int sd, char* filePath){
+int respond(int sd, char* filePath, FILE* mime){
 	int buffSize = 1024;
 	char buff[buffSize];
 	int l;
 	FILE* fp;
 
-	printf("%d\n", isDir(filePath));
+	// printf("%d\n", isDir(filePath));
 
-	if(0){//isDir(filePath)){
-		printf("running dirlist\n");
-		write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
-		writeDirList(sd, filePath);
+	// if(0){//isDir(filePath)){
+	// 	printf("running dirlist\n");
+	// 	write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
+	// 	writeDirList(sd, filePath);
+	// }
+
+	// else{
+	fp = fopen(filePath, "r");
+
+	if(fp==0){
+		perror(getTime());
+		write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
 	}
-
 	else{
-		fp = fopen(filePath, "r");
-
-		if(fp==0){
+		// Header
+		l = getMime(filePath, buff, mime);
+		// error handling
+		if(l == -1) { //. not in string, guess it is a folder
+			write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
+			writeDirList(sd, filePath);
+			// perror(getTime());
+			// write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 100);
+		} else if (l == -2) {
 			perror(getTime());
-			write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
-		}
-		else{
-			// Header
-			l = getMime(filePath, buff);
-			// error handling
-			if(l == -1) {
-				write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
-				writeDirList(sd, filePath);
-				// perror(getTime());
-				// write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 100);
-			} else if (l == -2) {
-				perror(getTime());
-				write(sd, "HTTP/1.1 510 Not Extended\nContent-Type: text/plain\n\nFurther extentions required", 79);
-			} else if (l == -3) {
-				perror(getTime());
-				write(sd, "HTTP/1.1 415 Unsupported Media Type\nContent-Type: text/plain\n\nMedia type not supported", 86);
-			} else {
-				write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
-				write(sd, buff, l);
-				write(sd, "\n\n", 2);
-			}
-
+			write(sd, "HTTP/1.1 510 Not Extended\nContent-Type: text/plain\n\nFurther extentions required", 79);
+		} else if (l == -3) {
+			perror(getTime());
+			write(sd, "HTTP/1.1 415 Unsupported Media Type\nContent-Type: text/plain\n\nMedia type not supported", 86);
+		} else {
+			write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
+			write(sd, buff, l);
+			write(sd, "\n\n", 2);
 			// Body
 			while (l = fread(buff, 1, 1024, fp)) {
-		 		write(sd, buff, l);	
+	 			write(sd, buff, l);	
 			}
 		}
-
 	}
-
 }
 
 char* getTime(){
@@ -256,7 +256,7 @@ int lineSearchMime(char* str, char* target){
 	while(str[i] == '\t')
 		i++;
 
-	while(str[i] != '\0'){
+	while(str[i] != '\0' && str[i] != '\n' || lik) {
 		if(target[j] == '\0')
 			return 1; // true
 		if(str[i] == target[j] && lik)
@@ -269,46 +269,14 @@ int lineSearchMime(char* str, char* target){
 		}
 		i++;
 	}
-	return 0; // not found
+	if(lik)
+		return 1;
+	else
+		return 0; // not found
 
 }
 
-int v(char* str, char* target){
-	int i, j;
-	int lik;
-
-	lik = 1;
-	i = j = 0;
-
-	while(str[i] != '\t')
-		i++;
-
-	while(str[i] == '\t')
-		i++;
-
-	while(str[i] != '\0'){
-		printf("str:%c, target:%c ", str[i], target[j]);
-		if(target[j] == '\0')
-			return 1; // true
-		if(str[i] == target[j] && lik){
-			printf("Charene er like\n");
-			j++;
-		}
-		else if(str[i] == ' '){
-			lik = 1;
-		}
-		else{
-			printf("Charene er ulike\n");
-			lik = 0;
-			j = 0;
-		}
-		i++;
-	}
-	return 0; // not found
-
-}
-
-int getMime(char* filePath, char* buff){
+int getMime(char* filePath, char* buff, FILE* mime){
 
 	size_t len = 1024;
 	ssize_t read;
@@ -323,7 +291,6 @@ int getMime(char* filePath, char* buff){
 	}
 	*ext++;
 	// Search after ext in mime file
-	FILE* mime = fopen("mime.types", "r");
 	if (mime == NULL) {
 		perror(getTime());
 		return -2;
@@ -334,8 +301,10 @@ int getMime(char* filePath, char* buff){
 			//v(buff, ext);
 			printf("%s:%s\n", buff, ext);
 			sub = strlen(strchr(buff, (int)'\t'));
+			rewind(mime);
 			return read - sub;			
 		}
 	}
+	rewind(mime);
 	return -3;
 }

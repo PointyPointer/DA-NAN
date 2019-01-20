@@ -26,7 +26,7 @@ int writeTag(int sd, char* tagName, char* content){
   return 0;
 }
 
-int writeA(int sd, char* temp){
+int writeA(int sd, char* temp, char* filePath){
   char* buff;
 
 
@@ -35,10 +35,19 @@ int writeA(int sd, char* temp){
 
   strcpy(buff, "<td>");
   strcat(buff, "<a href='");
+  strcat(buff, filePath);
+
+  if (filePath[strlen(filePath) - 1] != '/'){
+    strcat(buff, "/");
+  }
+  
   strcat(buff, temp);
   strcat(buff, "'>");
+
   strcat(buff, temp);
   strcat(buff, "</a></td>");
+
+  printf("%s\n", buff);
 
   write(sd, buff, strlen(buff));
 
@@ -67,6 +76,8 @@ void writeDirList(int sd, char *filsti){
 
   if ((dir = opendir (filsti)) == NULL) {
     perror (""); exit(1); }
+
+  chroot("/var/www");
 
   chdir(filsti);
 
@@ -107,7 +118,7 @@ void writeDirList(int sd, char *filsti){
 
     sprintf(temp, "%s",   ent->d_name);
 
-    writeA(sd, temp);
+    writeA(sd, temp, filsti);
     
 
     // writeTag(sd, "td", temp);
