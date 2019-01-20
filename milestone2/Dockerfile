@@ -1,6 +1,11 @@
 FROM scratch
-COPY static_web /web
-COPY test.asis /var/www/test.asis
+
+COPY web /etc/web
+COPY dumb-init /etc/dumb-init
+
+COPY www/test.asis /var/www/
 COPY error.log /var/log/web_error.log
+
 EXPOSE 80
-CMD ["/web"]
+
+CMD ["/etc/dumb-init","/etc/web"]

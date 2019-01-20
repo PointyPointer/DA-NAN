@@ -26,6 +26,37 @@ int writeTag(int sd, char* tagName, char* content){
   return 0;
 }
 
+int writeA(int sd, char* temp){
+  char* buff;
+
+
+  buff = malloc(5000);
+
+
+  strcpy(buff, "<td>");
+  strcat(buff, "<a href='");
+  strcat(buff, temp);
+  strcat(buff, "'>");
+  strcat(buff, temp);
+  strcat(buff, "</a></td>");
+
+  write(sd, buff, strlen(buff));
+
+  // strcpy(buff, "<");
+  // strcat(buff, tagName);
+  // strcat(buff, ">");
+
+  // strcat(buff, content);
+  // strcat(buff, "</");
+  // strcat(buff, tagName);
+  // strcat(buff, ">");
+
+  // write(sd, buff, strlen(buff));
+
+  free(buff);
+  return 0;
+}
+
 void writeDirList(int sd, char *filsti){
 
   struct stat       stat_buffer;
@@ -72,11 +103,17 @@ void writeDirList(int sd, char *filsti){
     writeTag(sd, "td", temp);
     sprintf(temp, "%d",   stat_buffer.st_gid);
     writeTag(sd, "td", temp);
+    
+
     sprintf(temp, "%s",   ent->d_name);
-    writeTag(sd, "td", temp);
 
+    writeA(sd, temp);
+    
 
-    write(sd, "</tr>", 5);       
+    // writeTag(sd, "td", temp);
+    // write(sd, "</a>", 4);
+
+    // write(sd, "</tr>", 5);       
 
     // writeTag(sd, "%o\t\t", stat_buffer.st_mode & 0777 );      
     // write(sd, "%d\t",   stat_buffer.st_uid);

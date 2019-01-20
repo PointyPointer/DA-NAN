@@ -16,7 +16,7 @@
 #define GET_HEAD_SIZE 2048
 #define UID 1000
 #define GID 1000
-#define ROOTDIR "/home/pointy/code/DA-NAN/milestone2"
+#define ROOTDIR "/"
 
 int socketSetup();
 
@@ -30,33 +30,53 @@ int parseRequest(int, char*, char*);
 
 int isDir(char*);
 
-char* getMime(char*);
+int getMime(char*, char*);
 
 
 
-int main(){
+int main(int argc, char* argv[]){
+
 	// Declarations
 	int sd, client_sd;
 	char buf[GET_HEAD_SIZE];
-	FILE* err;
-	FILE *fp;
+	FILE *err;
 
 	char *httpMethod;
 	char *filePath;
+	char *logPath = "/var/log/web_error.log";
+	char *newRootDir = "/var/www/";
 
-	err = fopen("/var/log/web_error.log", "a");
+	// argument handling
+	// for (int i = 0; i<argc; i++){
+	// 	if (argv[i] == "--log-file") {
+	// 		logPath = argv[i++];
+	// 	} else if(argv[i] == "--chroot-dir") {
+	// 		newRootDir = argv[i++];
+	// 	}
+	// }
+
+	// error stream to log
+
+	err = fopen(logPath, "a");
 	dup2(fileno(err), 2);
 	fclose(err);
+
+	
+	chroot("/var/www");
 
 	// initialation of socket and binding
 	sd = socketSetup();
 
-	// Turn the process to a daemon
-	deamonize();
+	// Turn the process into a daemon
+	//deamonize();
 
 	listen(sd, QUEUE_SIZE);
+	//perror("listen");
+
 	// Main loop
 	while(1){
+		//perror("Venter paa client");
+
 		client_sd = accept(sd, NULL, NULL);		
 		// Child
 		if(fork()==0){
@@ -95,8 +115,8 @@ int socketSetup(){
 		exit(1);		
 	}
 
-	setuid( (uid_t) UID );
-	setgid( (gid_t) GID );
+	//setuid( (uid_t) UID );
+	//setgid( (gid_t) GID );
 
 	return sd;
 }
@@ -104,6 +124,7 @@ int socketSetup(){
 int deamonize(){
 
 	if(fork()){
+		//raise(SIGSTOP);
 		exit(0); //parent dies
 	}
 	setsid(); // Create session, free from tty
@@ -124,11 +145,15 @@ int deamonize(){
 
 int respond(int sd, char* filePath){
 	int buffSize = 1024;
-	char* buff[buffSize];
+	char buff[buffSize];
 	int l;
 	FILE* fp;
 
-	if(isDir(filePath)){
+	printf("%d\n", isDir(filePath));
+
+	if(0){//isDir(filePath)){
+		printf("running dirlist\n");
+		write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
 		writeDirList(sd, filePath);
 	}
 
@@ -141,20 +166,32 @@ int respond(int sd, char* filePath){
 		}
 		else{
 			// Header
-			write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
 			l = getMime(filePath, buff);
-			write(sd, buff, l);
-			write(sd, '\n\n', 2);
+			// error handling
+			if(l == -1) {
+				write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
+				writeDirList(sd, filePath);
+				// perror(getTime());
+				// write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 100);
+			} else if (l == -2) {
+				perror(getTime());
+				write(sd, "HTTP/1.1 510 Not Extended\nContent-Type: text/plain\n\nFurther extentions required", 79);
+			} else if (l == -3) {
+				perror(getTime());
+				write(sd, "HTTP/1.1 415 Unsupported Media Type\nContent-Type: text/plain\n\nMedia type not supported", 86);
+			} else {
+				write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
+				write(sd, buff, l);
+				write(sd, "\n\n", 2);
+			}
 
 			// Body
 			while (l = fread(buff, 1, 1024, fp)) {
 		 		write(sd, buff, l);	
 			}
-
 		}
 
 	}
-
 
 }
 
@@ -176,11 +213,9 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	strcpy(filePath, ROOTDIR);
-
 	// method of splitting string
 	strcpy(httpMethod, token);
-	strcat(filePath, strtok(NULL, " "));
+	strcpy(filePath, strtok(NULL, " "));
 
 
 	return 0;
@@ -191,23 +226,116 @@ int isDir(char* path){
 	int ret;
 	char lastChar;
 
+
 	i = 0;
 	lastChar = '/';
+
 	while(path[i] != '\0'){
 		lastChar = path[i];
+		i++;
 	}
 
 	if(lastChar == '/')
-		return 0;
-	else
 		return 1;
+	
+	else
+		return 0;
 
 }
-int getMime(char* filePath, char* type){
+
+int lineSearchMime(char* str, char* target){
+	int i, j;
+	int lik;
+
+	lik = 1;
+	i = j = 0;
+
+	while(str[i] != '\t')
+		i++;
+
+	while(str[i] == '\t')
+		i++;
+
+	while(str[i] != '\0'){
+		if(target[j] == '\0')
+			return 1; // true
+		if(str[i] == target[j] && lik)
+			j++;
+		else if(str[i] == ' ')
+			lik = 1;
+		else{ // ulike bokstaver
+			lik = 0;
+			j = 0;
+		}
+		i++;
+	}
+	return 0; // not found
+
+}
+
+int v(char* str, char* target){
+	int i, j;
+	int lik;
+
+	lik = 1;
+	i = j = 0;
+
+	while(str[i] != '\t')
+		i++;
+
+	while(str[i] == '\t')
+		i++;
+
+	while(str[i] != '\0'){
+		printf("str:%c, target:%c ", str[i], target[j]);
+		if(target[j] == '\0')
+			return 1; // true
+		if(str[i] == target[j] && lik){
+			printf("Charene er like\n");
+			j++;
+		}
+		else if(str[i] == ' '){
+			lik = 1;
+		}
+		else{
+			printf("Charene er ulike\n");
+			lik = 0;
+			j = 0;
+		}
+		i++;
+	}
+	return 0; // not found
+
+}
+
+int getMime(char* filePath, char* buff){
+
+	size_t len = 1024;
+	ssize_t read;
+	char *ext;
+	int sub;
+	
 	// Find file extension
-
+	ext = strrchr(filePath, (int)'.');
+	if (ext == NULL) {
+		perror(getTime());
+		return -1;
+	}
+	*ext++;
 	// Search after ext in mime file
+	FILE* mime = fopen("mime.types", "r");
+	if (mime == NULL) {
+		perror(getTime());
+		return -2;
+	}
 
-	// Return length of content-type
-
+	while ((read = getline(&buff,&len, mime)) != -1) {
+		if (lineSearchMime(buff, ext)){
+			//v(buff, ext);
+			printf("%s:%s\n", buff, ext);
+			sub = strlen(strchr(buff, (int)'\t'));
+			return read - sub;			
+		}
+	}
+	return -3;
 }

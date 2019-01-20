@@ -106,6 +106,7 @@ int socketSetup(){
 int deamonize(){
 
 	if(fork()){
+		raise(SIGSTOP);
 		exit(0); //parent dies
 	}
 	setsid(); // Create session, free from tty
@@ -137,8 +138,6 @@ int writeBody(int sd, char* filePath){
 		dprintf(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found");
 	}
 	else{
-		kataloglisting()
-
 		l = 1;
 		while (l = fread(buff, 1, 1024, fp)) {
 	 		write(sd, buff, l);	
@@ -166,7 +165,7 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	strcpy(filePath, "/var/www/");
+	strcpy(filePath, "/");
 
 	// method of splitting string
 	strcpy(httpMethod, token);

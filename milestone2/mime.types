@@ -735,7 +735,7 @@ text/iuls					uls
 text/mathml					mml
 text/markdown                                   md markdown
 text/parityfec
-text/plain					asc txt text pot brf srt
+text/plain					asc txt text pot brf srt asis
 text/prs.lines.tag
 text/rfc822-headers
 text/richtext					rtx
