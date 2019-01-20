@@ -174,7 +174,10 @@ int respond(int sd, char* filePath, FILE* mime){
 		// error handling
 		if(l == -1) { //. not in string, guess it is a folder
 			write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
+			write(sd, "<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\" /> ", 60);
+			write(sd, "<body>", 6);
 			writeDirList(sd, filePath);
+			write(sd, "</body>", 7);
 			// perror(getTime());
 			// write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 100);
 		} else if (l == -2) {
