@@ -4,9 +4,11 @@
 #include <unistd.h> 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int writeTag(int sd, char* tagName, char* content){
   char* buff;
+
 
   buff = malloc(5000);
   strcpy(buff, "<");
@@ -14,7 +16,7 @@ int writeTag(int sd, char* tagName, char* content){
   strcat(buff, ">");
 
   strcat(buff, content);
-  strcpy(buff, "</");
+  strcat(buff, "</");
   strcat(buff, tagName);
   strcat(buff, ">");
 
@@ -24,7 +26,47 @@ int writeTag(int sd, char* tagName, char* content){
   return 0;
 }
 
-void kataloglisting(int sd, char *filsti){
+int writeA(int sd, char* temp, char* filePath){
+  char* buff;
+
+
+  buff = malloc(5000);
+
+
+  strcpy(buff, "<td>");
+  strcat(buff, "<a href='");
+  strcat(buff, filePath);
+
+  if (filePath[strlen(filePath) - 1] != '/'){
+    strcat(buff, "/");
+  }
+  
+  strcat(buff, temp);
+  strcat(buff, "'>");
+
+  strcat(buff, temp);
+  strcat(buff, "</a></td>");
+
+  printf("%s\n", buff);
+
+  write(sd, buff, strlen(buff));
+
+  // strcpy(buff, "<");
+  // strcat(buff, tagName);
+  // strcat(buff, ">");
+
+  // strcat(buff, content);
+  // strcat(buff, "</");
+  // strcat(buff, tagName);
+  // strcat(buff, ">");
+
+  // write(sd, buff, strlen(buff));
+
+  free(buff);
+  return 0;
+}
+
+void writeDirList(int sd, char *filsti){
 
   struct stat       stat_buffer;
   struct dirent    *ent;
@@ -35,9 +77,12 @@ void kataloglisting(int sd, char *filsti){
   if ((dir = opendir (filsti)) == NULL) {
     perror (""); exit(1); }
 
+  chroot("/var/www");
+
   chdir(filsti);
 
   buff = malloc(2000);
+  temp = malloc(200);
 
   strcpy(buff, "Katalogen :");
   strcat(buff, filsti);
@@ -69,11 +114,17 @@ void kataloglisting(int sd, char *filsti){
     writeTag(sd, "td", temp);
     sprintf(temp, "%d",   stat_buffer.st_gid);
     writeTag(sd, "td", temp);
-    sprintf(temp, "%s",   ent->d_name);
-
-    write(sd, "</tr>", 4);       
     
 
+    sprintf(temp, "%s",   ent->d_name);
+
+    writeA(sd, temp, filsti);
+    
+
+    // writeTag(sd, "td", temp);
+    // write(sd, "</a>", 4);
+
+    // write(sd, "</tr>", 5);       
 
     // writeTag(sd, "%o\t\t", stat_buffer.st_mode & 0777 );      
     // write(sd, "%d\t",   stat_buffer.st_uid);
@@ -84,5 +135,6 @@ void kataloglisting(int sd, char *filsti){
   write(sd, "</table>", 8);       
 
   free(buff);
+  free(temp);
   closedir (dir);
 }

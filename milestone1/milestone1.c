@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <time.h>
 
+#include "katalog.h"
+
 #define QUEUE_SIZE 20
 #define PORT 80
 #define GET_HEAD_SIZE 2048
@@ -40,10 +42,14 @@ int main(){
 	dup2(fileno(err), 2);
 	fclose(err);
 
+<<<<<<< HEAD
 	if(chroot("/var/www")){
 		perror(getTime());
 		exit(1);
 	}
+=======
+	chroot("/var/www");
+>>>>>>> 878f9e0b7afcad2a510cbbe1cdf6e9628a01518d
 
 	// initialation of socket and binding
 	sd = socketSetup();
@@ -139,8 +145,6 @@ int writeBody(int sd, char* filePath){
 		dprintf(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found");
 	}
 	else{
-		perror(getTime());
-
 		l = 1;
 		while (l = fread(buff, 1, 1024, fp)) {
 	 		write(sd, buff, l);	
@@ -168,7 +172,7 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	strcpy(filePath, "/var/www/");
+	strcpy(filePath, "/");
 
 	// method of splitting string
 	strcpy(httpMethod, token);

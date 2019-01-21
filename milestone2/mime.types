@@ -629,7 +629,7 @@ image/g3fax
 image/gif					gif
 image/ief					ief
 image/jp2					jp2 jpg2
-image/jpeg					jpeg jpg jpe
+image/jpeg					jpeg jpe jpg
 image/jpm					jpm
 image/jpx					jpx jpf
 image/naplps
@@ -735,7 +735,7 @@ text/iuls					uls
 text/mathml					mml
 text/markdown                                   md markdown
 text/parityfec
-text/plain					asc txt text pot brf srt
+text/plain					asc txt text pot brf srt log asis
 text/prs.lines.tag
 text/rfc822-headers
 text/richtext					rtx
