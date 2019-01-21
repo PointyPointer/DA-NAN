@@ -48,13 +48,13 @@ int main(int argc, char* argv[]){
 	char *newRootDir = "/var/www/";
 
 	// argument handling
-	// for (int i = 0; i<argc; i++){
-	// 	if (argv[i] == "--log-file") {
-	// 		logPath = argv[i++];
-	// 	} else if(argv[i] == "--chroot-dir") {
-	// 		newRootDir = argv[i++];
-	// 	}
-	// }
+	for (int i = 0; i<argc; i++){
+		if (strcmp(argv[i], "--log-file") == 0 && strcmp(argv[i+1], "--chroot-dir") != 0) {
+			logPath = argv[i+1];
+		} else if(strcmp(argv[i], "--chroot-dir") == 0 && strcmp(argv[i], "--log-file") != 0) {
+			newRootDir = argv[i+1];
+		}
+	}
 
 	// error stream to log
 
