@@ -1,6 +1,6 @@
 #/bin/bash
 
-gcc --static -o web milestone2.c
+gcc --static -o etc/web milestone2.c
 touch error.log
 docker build -t web .
 rm -f error.log

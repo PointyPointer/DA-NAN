@@ -158,17 +158,6 @@ int respond(int sd, char* filePath, FILE* mime){
 	int l;
 	FILE *fp;
 
-	// if(isDir(filePath)){
-	// 	kataloglisting(sd, filePath);
-	// }
-
-	// if(0){//isDir(filePath)){
-	// 	printf("running dirlist\n");
-	// 	write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
-	// 	writeDirList(sd, filePath);
-	// }
-
-	// else{
 	fp = fopen(filePath, "r");
 
 	if(fp==0){
@@ -176,15 +165,6 @@ int respond(int sd, char* filePath, FILE* mime){
 		write(sd, "HTTP/1.1 404 Not Found\nContent-Type: text/plain\n\nFile not found", 63);
 	}
 	else{
-		// // Header
-		// write(sd, "HTTP/1.1 200 OK\nContent-Type: ", 30);
-		// l = getMime(filePath, buff);
-		// write(sd, buff, l);
-		// write(sd, "\n\n", 2);
-
-		// // Body
-		// while (l = fread(buff, 1, 1024, fp)) {
-	 // 		write(sd, buff, l);
 
 		l = getMime(filePath, buff, mime);
 		// error handling
@@ -194,8 +174,6 @@ int respond(int sd, char* filePath, FILE* mime){
 			write(sd, "<body>", 6);
 			writeDirList(sd, filePath);
 			write(sd, "</body>", 7);
-			// perror(getTime());
-			// write(sd, "HTTP/1.1 418 I'm a teapot\nContent-Type: text/plain\n\nThe resulting entity body MAY be short and stout", 100);
 		} else if (l == -2) {
 			perror(getTime());
 			write(sd, "HTTP/1.1 510 Not Extended\nContent-Type: text/plain\n\nFurther extentions required", 79);
@@ -232,14 +210,11 @@ int parseRequest(int sd, char* httpMethod, char* filePath){
 	read(sd, buff, 5000);
 	token = strtok(buff, " ");	
 
-	//strcpy(filePath, "/");
-
 	// method of splitting string
 	strcpy(httpMethod, token);
 	strcpy(filePath, strtok(NULL, " "));
 
 	free(buff);
-
 
 	return 0;
 }
@@ -321,7 +296,6 @@ int getMime(char* filePath, char* buff, FILE* mime){
 
 	while ((read = getline(&buff,&len, mime)) != -1) {
 		if (lineSearchMime(buff, ext)){
-			//v(buff, ext);
 			printf("%s:%s\n", buff, ext);
 			sub = strlen(strchr(buff, (int)'\t'));
 			rewind(mime);
