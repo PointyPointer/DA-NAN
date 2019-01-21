@@ -31,7 +31,7 @@ int isDir(char*);
 
 int getMime(char*, char*, FILE*);
 
-int logAccess(int, char*);
+int logAccess(int, char*, FILE*);
 
 
 int main(int argc, char* argv[]){
@@ -77,9 +77,9 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-	access = fopen(accessPath, "r");
-	if(mime == 0){
-		perror(mimePath);
+	access = fopen(accessPath, "a");
+	if(access == 0){
+		perror(accessPath);
 		exit(1);
 	}
 	
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
 
 			respond(client_sd, filePath, mime);
 
-			logAccess(client_sd, filePath);
+			logAccess(client_sd, filePath, access);
 
 			// terminate child
 			shutdown(client_sd, SHUT_RDWR);
@@ -321,7 +321,7 @@ int getMime(char* filePath, char* buff, FILE* mime){
 	return -3;
 }
 
-int logAccess(int s, char* filePath){
+int logAccess(int s, char* filePath, FILE* access){
 	socklen_t len;
 	struct sockaddr_storage addr;
 	char ipstr[INET6_ADDRSTRLEN];
@@ -341,5 +341,5 @@ int logAccess(int s, char* filePath){
 		inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
 	}
 
-	dprintf(2,"%s tried to access: %s, at: %\sn", ipstr, filePath, getTime());
+	fprintf(access,"%s tried to access: %s, at: %sn", ipstr, filePath, getTime());
 }
