@@ -341,5 +341,10 @@ int logAccess(int s, char* filePath, FILE* access){
 		inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
 	}
 
+<<<<<<< HEAD:milestone3/milestone2.c
 	fprintf(access,"{ip: %s, file:%s, time: %s}\n", ipstr, filePath, getTime());
 }
+=======
+	fprintf(access,"%s tried to access: %s, at: %s\n", ipstr, filePath, getTime());
+}
+>>>>>>> bdef28bc104b34e030bce7bd49e40fdff0b096b1:milestone3/milestone3.c
