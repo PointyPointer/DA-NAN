@@ -31,6 +31,7 @@ int isDir(char*);
 
 int getMime(char*, char*, FILE*);
 
+int logAccess(int, char*, FILE*);
 
 
 int main(int argc, char* argv[]){
@@ -40,10 +41,15 @@ int main(int argc, char* argv[]){
 	char buf[GET_HEAD_SIZE];
 	FILE* err;
 	FILE* mime;
+	FILE* access;
+	
+	struct sockaddr_in addr;
+	socklen_t addr_len = sizeof(addr);
 
 	char *httpMethod;
 	char *filePath;
 	char *logPath = "/var/log/web_error.log";
+	char *accessPath = "/var/log/web_access.log";
 	char *newRootDir = "/var/www";
 	char *mimePath = "/etc/mime.types";
 
@@ -68,6 +74,12 @@ int main(int argc, char* argv[]){
 	mime = fopen(mimePath, "r");
 	if(mime == 0){
 		perror(mimePath);
+		exit(1);
+	}
+
+	access = fopen(accessPath, "a");
+	if(access == 0){
+		perror(accessPath);
 		exit(1);
 	}
 	
@@ -95,6 +107,8 @@ int main(int argc, char* argv[]){
 			parseRequest(client_sd, httpMethod, filePath);
 
 			respond(client_sd, filePath, mime);
+
+			logAccess(client_sd, filePath, access);
 
 			// terminate child
 			shutdown(client_sd, SHUT_RDWR);
@@ -147,7 +161,7 @@ int deamonize(){
 	}
 
 	close(0);
-	close(1);
+	//close(1);
 
 	return 0;
 }
@@ -172,6 +186,7 @@ int respond(int sd, char* filePath, FILE* mime){
 			write(sd, "HTTP/1.1 200 OK\nContent-Type: text/html\n\n", 41);
 			write(sd, "<link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\" /> ", 60);
 			write(sd, "<body>", 6);
+			write(sd, "<img src=\"potet_logo.png\" height=\"100\" width=\"100\"/>", 52);
 			writeDirList(sd, filePath);
 			write(sd, "</body>", 7);
 		} else if (l == -2) {
@@ -304,4 +319,27 @@ int getMime(char* filePath, char* buff, FILE* mime){
 	}
 	rewind(mime);
 	return -3;
+}
+
+int logAccess(int s, char* filePath, FILE* access){
+	socklen_t len;
+	struct sockaddr_storage addr;
+	char ipstr[INET6_ADDRSTRLEN];
+	int port;
+
+	len = sizeof addr;
+	getpeername(s, (struct sockaddr*)&addr, &len);
+
+	// deal with both IPv4 and IPv6:
+	if (addr.ss_family == AF_INET) {
+		struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+		port = ntohs(s->sin_port);
+		inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+	} else { // AF_INET6
+		struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+		port = ntohs(s->sin6_port);
+		inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+	}
+
+	fprintf(access,"{ip: %s, file:%s, time: %s}\n", ipstr, filePath, getTime());
 }
