@@ -4,6 +4,6 @@ FROM httpd:alpine
 RUN ["apk", "add", "python3"]
 
 EXPOSE 80
-COPY ./cgi/* /usr/local/apache2/cgi-bin/
-COPY ./http.conf /usr/local/apache2/conf/httpd.conf
+COPY milestone3/cgi/* /usr/local/apache2/cgi-bin/
+COPY milestone3/http.conf /usr/local/apache2/conf/httpd.conf
 
