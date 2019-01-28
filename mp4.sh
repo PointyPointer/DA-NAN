@@ -12,4 +12,4 @@ docker run -d --cap-drop ALL --cap-add NET_BIND_SERVICE --cap-add SETGID --cap-a
 
 docker run -d --name "mp4_alpine" -p 8080:80 mp4_alpine
 
-docker run -d --mount type=volume,src=database,dst=/db --name "mp4_rest" -p 1337:1337 mp4_rest
+docker run -d --mount type=volume,src=./database,dst=/db --name "mp4_rest" -p 1337:1337 mp4_rest
