@@ -6,10 +6,8 @@ const bodyParser = require("body-parser")
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337 	
 
-// app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(xmlparser());
-// app.use(express.json());
 // app.use(express.urlencoded());
 app.use(xmlparser());
 
@@ -31,6 +29,7 @@ app.get('/forfatter', (req, res) => {
 	})
 	db.close()
 })
+
 
 app.get('/forfatter/:forfatterID', (req, res) => {
 	let db = new sqlite3.Database('/db/potatoDB.db')
@@ -58,6 +57,7 @@ app.get('/forfatter/:forfatterID', (req, res) => {
 	})
 })
 
+
 app.get('/bok', (req, res) => {
 	var db = new sqlite3.Database('/db/potatoDB.db')
 	db.serialize(() => {
@@ -71,6 +71,7 @@ app.get('/bok', (req, res) => {
 	})
 	db.close()
 })
+
 
 app.get('/bok/:bokID', (req, res) => {
 	let db = new sqlite3.Database('/db/potatoDB.db')
@@ -87,7 +88,7 @@ app.get('/bok/:bokID', (req, res) => {
 			else{
 				var obj = { 
 				  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
-				  forfatter : row
+				  bok : row
 				}
 				console.log(row)
 				res.end(o2x(obj))				
@@ -98,35 +99,167 @@ app.get('/bok/:bokID', (req, res) => {
 	})
 })
 
+
 app.post('/bok', (req, res) => {
 	let db = new sqlite3.Database('/db/potatoDB.db')
-	//console.log(req)
+	let count = 0;	
 	console.log(req.body)
-	// db.serialize(() => {
 
+	
+	// Check if all fields are present in request
+	if(req.body.bok.forfatterid && req.body.bok.tittel){
+		db.serialize(() => {
 
-	// 	let stmt = db.prepare('SELECT * FROM Bok WHERE bokID = (?)', err => {
-	// 		if(err) console.log('DB prepare', err)
-	// 	})
-	// 	console.log('forfatter id:', req.params['forfatterID'])
-	// 	stmt.get(req.params['bokID'], (err, row) => {
-	// 		if(err){
-	// 			console.log(err)
-	// 		}
-	// 		else{
-	// 			var obj = { 
-	// 			  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
-	// 			  forfatter : row
-	// 			}
-	// 			console.log(row)
-	// 			res.end(o2x(obj))				
-	// 		}
-	// 	})
-	// 	stmt.finalize()
-	// 	db.close()		
-	// })
-	res.send(":)")
+			let stmt = db.prepare('INSERT INTO Bok(tittel, forfatterID) VALUES ((?),(?))', err => {
+				if(err) console.log('DB prepare', err)
+			})
+			stmt.run([req.body.bok.tittel[0], req.body.bok.forfatterid[0]], (err, row) => {
+				if(err){
+					console.log(err)
+				}
+				else{
+					var obj = { 
+					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					  oppdatert : 1
+					}
+					console.log(row)
+					res.end(o2x(obj))				
+				}
+			})
+			stmt.finalize()
+		})
+	}
+	else{
+		var obj = { 
+		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		  oppdatert: count
+		}
+		res.send(o2x(obj))
+	}
+		
+	db.close()
 })
+
+
+app.post('/forfatter', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+	console.log(req.body)
+
+	
+	// Check if all fields are present in request
+	if(req.body.forfatter.fornavn && req.body.forfatter.etternavn && req.body.forfatter.nasjonalitet){
+		db.serialize(() => {
+
+			let stmt = db.prepare('INSERT INTO Forfatter(fornavn, etternavn, nasjonalitet) VALUES ((?),(?),(?))', err => {
+				if(err) console.log('DB prepare', err)
+			})
+			stmt.run([req.body.forfatter.fornavn[0], req.body.forfatter.etternavn[0], req.body.forfatter.nasjonalitet[0]], (err, row) => {
+				if(err){
+					console.log(err)
+				}
+				else{
+					var obj = { 
+					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					  oppdatert : 1
+					}
+					console.log(row)
+					res.end(o2x(obj))				
+				}
+			})
+			stmt.finalize()
+		})
+	}
+	else{
+		var obj = { 
+		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		  oppdatert: 0
+		}
+		res.send(o2x(obj))
+	}
+		
+	db.close()
+})
+
+
+app.put('/forfatter', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+	console.log(req.body)
+
+	
+	// Check if all fields are present in request
+	if(req.body.forfatter.fornavn && req.body.forfatter.etternavn && req.body.forfatter.nasjonalitet && req.body.forfatter.forfatterid){
+		db.serialize(() => {
+
+			let stmt = db.prepare('UPDATE Forfatter SET fornavn = (?), etternavn = (?), nasjonalitet = (?) WHERE forfatterID = (?)', err => {
+				if(err) console.log('DB prepare', err)
+			})
+			stmt.run([req.body.forfatter.fornavn[0], req.body.forfatter.etternavn[0], req.body.forfatter.nasjonalitet[0], req.body.forfatter.forfatterid[0]], (err, row) => {
+				if(err){
+					console.log(err)
+				}
+				else{
+					var obj = { 
+					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					  oppdatert : 1
+					}
+					console.log(row)
+					res.end(o2x(obj))				
+				}
+			})
+			stmt.finalize()
+		})
+	}
+	else{
+		var obj = { 
+		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		  oppdatert: 0
+		}
+		res.send(o2x(obj))
+	}
+		
+	db.close()
+})
+
+
+app.put('/bok', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+	console.log(req.body)
+
+	
+	// Check if all fields are present in request
+	if(req.body.bok.bokid && req.body.bok.tittel && req.body.bok.forfatterid){
+		db.serialize(() => {
+
+			let stmt = db.prepare('UPDATE Forfatter SET tittel = (?), forfatterID = (?) WHERE bokID = (?)', err => {
+				if(err) console.log('DB prepare', err)
+			})
+			stmt.run([req.body.bok.tittel[0], req.body.bok.forfatterid[0], req.body.bok.bokid[0]], (err, row) => {
+				if(err){
+					console.log(err)
+				}
+				else{
+					var obj = { 
+					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					  oppdatert : 1
+					}
+					console.log(row)
+					res.end(o2x(obj))				
+				}
+			})
+			stmt.finalize()
+		})
+	}
+	else{
+		var obj = { 
+		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		  oppdatert: 0
+		}
+		res.send(o2x(obj))
+	}
+		
+	db.close()
+})
+
 
 
 
