@@ -28,7 +28,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/forfatter', (req, res) => {
 	db.serialize(() => {
 		db.each('SELECT * FROM Forfatter', (err, row) => {
-			res.send(row.fornavn + " " +  row.etternanv)
+			res.send(row.fornavn + " " +  row.etternavn)
 		})
 	})
 	db.close()
