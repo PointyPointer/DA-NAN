@@ -24,7 +24,7 @@ CREATE TABLE Bruker (
   fornavn VARCHAR(100), 
   etternavn VARCHAR(100),
 
-  PRIMARY KEY (forfatterID)
+  PRIMARY KEY (brukerID)
 );
 
 CREATE TABLE Sesjon ( 
