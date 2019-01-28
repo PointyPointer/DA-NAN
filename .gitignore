@@ -57,3 +57,4 @@ dkms.conf
 */web
 */*/web
 */static_web
+*/node_modules
