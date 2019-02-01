@@ -263,5 +263,12 @@ app.put('/bok', (req, res) => {
 
 
 
+app.get('/login', (req, res) => {
+
+}
+
+app.get('/logout', (req, res) => {
+
+}
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

@@ -2,8 +2,8 @@
 
 FROM scratch
 
-COPY etc/* /etc/
-COPY www/* /var/www/
+COPY web/etc/* /etc/
+COPY web/www/* /var/www/
 
 COPY error.log /var/log/web_error.log
 COPY access.log /var/log/web_access.log
