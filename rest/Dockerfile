@@ -5,11 +5,12 @@ FROM node:alpine
 RUN ["apk", "update"]
 RUN ["apk", "upgrade"]
 
-RUN ["apk", "add", "--update", "sqlite"]
+RUN ["apk", "add", "--virtual", "sqlite", "python", "builds-deps", "build-base" ]
 
 WORKDIR /app
-COPY rest/*.json /app/
+COPY *.json /app/
 
+#RUN ["npm", "rebuild", "bcrypt", "--build-from-source"]
 RUN ["npm", "install"]
 
 COPY rest/app.js /app/app.js
