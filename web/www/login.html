@@ -1,0 +1,41 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Log in</title>
+</head>
+<body>
+
+	<h1>Welcome to PotatoDB :)</h1>
+	<div>
+		User Name<br>
+		<input id="un"type="text" name="userName"><br>
+		Password<br>
+		<input id="pw"type="password" name="passwd"><br>
+		<button onclick="submit()">Submit</button>
+		<button onclick="signin()">Sign up</button><br>
+	</div>
+</body>
+<script>
+	function signin() {
+		Window,location.href = "/signin.html"
+	}
+
+	function submit() {
+		var xmlDocument
+		var xhr = new XMLHttpRequest()
+		xhr.open("POST","http://128.39.166.99:1337/login",true)
+		xhr.setRequestHeader("Content-type","application/xml")
+
+		username = document.getElementById("un").value
+		passwd = document.getElementById("pw").value
+		xmlDocument = "<user>\n\t<username>" + username + "</username>\n\t<password>" + passwd + "</password>\n</user>"
+		console.log(xmlDocument)		
+		xhr.send(xmlDocument)
+		xhr.onreadystatechange = function() { 
+			if (xhr.readyState === 4 && xhr.status === 200) {
+        Window.location.href = "/index.html"
+			}
+		}
+	}
+</script>
+</html> 

@@ -1,11 +1,9 @@
-const express = require('express')
-const app = express()
 const o2x = require('object-to-xml')
-const parseString = require('xml2js').parseString;
+const parseString = require('xml2js').parseString
 const bodyParser = require("body-parser")
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337 	
-
+const bcrypt = require('bcrypt')
 //app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(xmlparser());
 // app.use(express.urlencoded());
@@ -276,6 +274,57 @@ app.delete('/:tablename/:id', (req, res) => {
 	db.close()
 })
 
+app.post('/signup', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+	let firstname = req.body.user.firstname
+	let lastname = req.body.user.lastname
+	let clearpwd = req.body.user.passwd
+
+	const saltrounds = 10
+
+	bcrypt.hash(clearpwd, saltRounds, function(err, hash) {
+		db.serialize(() => {
+			let stmt = db.prepare('INSERT INTO Bruker(passordhash, fornavn, etternavn) VALUES ((?),(?),(?))', err => {
+         if(err) console.log('DB prepare', err)
+       })
+			stmt.run([hash, firstname, req.body.lastname], (err, row) => {
+         if(err){
+           console.log(err)
+         }
+         else{
+           var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert : 1 }
+           console.log(row)
+           res.end(o2x(obj))
+         }
+       })
+       stmt.finalize()
+
+	})
+	db.close()
+}
+
+app.post('/signin', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+	let username = req.body.user.username
+	let clearpwd = req.body.user.password
+	let hashpwd
+
+	db.serialize(() => {
+		let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = ((?))'), err => {
+			if(err) console.log('DB prepare', err)
+		})
+		stmt.get(username, [], (err, row) => {
+			if(err) console.log(err)
+			hashpwd = row.passordhash			
+		})	
+	}
+	bcrypt.compare(clearpwd, hashpwd, (err, res) {
+		if(res === true) {
+			db.serialize(() => {
+				let stmt = db.prepare	
+		}	
+	})
+	db.close()
 }
 
 app.get('/logout', (req, res) => {

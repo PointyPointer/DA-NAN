@@ -4,8 +4,7 @@ FROM node:alpine
 
 RUN ["apk", "update"]
 RUN ["apk", "upgrade"]
-
-RUN ["apk", "add", "--update", "sqlite"]
+Run ["apk","add","--update","python","sqlite","make","g++"]
 
 WORKDIR /app
 COPY rest/*.json /app/
