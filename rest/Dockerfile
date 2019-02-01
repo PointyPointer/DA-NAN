@@ -4,11 +4,12 @@ FROM node:alpine
 
 RUN ["apk", "update"]
 RUN ["apk", "upgrade"]
-Run ["apk","add","--update","python","sqlite","make","g++"]
+RUN ["apk", "add", "--virtual", "sqlite", "python", "builds-deps", "build-base","make","g++" ]
 
 WORKDIR /app
-COPY rest/*.json /app/
+COPY *.json /app/
 
+#RUN ["npm", "rebuild", "bcrypt", "--build-from-source"]
 RUN ["npm", "install"]
 
 COPY rest/app.js /app/app.js
