@@ -4,7 +4,7 @@ FROM node:alpine
 
 RUN ["apk", "update"]
 RUN ["apk", "upgrade"]
-RUN ["apk", "add", "--virtual", "sqlite", "python", "builds-deps", "build-base","make","g++" ]
+RUN ["apk", "add", "--no-cache", "sqlite", "python", "build-base","make","g++" ]
 
 WORKDIR /app
 COPY *.json /app/
@@ -12,7 +12,7 @@ COPY *.json /app/
 #RUN ["npm", "rebuild", "bcrypt", "--build-from-source"]
 RUN ["npm", "install"]
 
-COPY rest/app.js /app/app.js
+COPY app.js /app/app.js
 EXPOSE 1337
 CMD node app.js
 
