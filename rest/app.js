@@ -15,6 +15,7 @@ app.use(xmlparser());
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
+	res.header('accept', 'application/xml')
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'content-type')
