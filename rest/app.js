@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337 	
 const bcrypt = require('bcrypt')
+
 //app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(xmlparser());
 // app.use(express.urlencoded());
@@ -17,6 +18,7 @@ app.use((req,res,next) => {
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'content-type')
+	console.log('I got here')
 	next()
 })
 app.get('/', (req, res) => res.send('Hello World!'))	
@@ -286,7 +288,7 @@ app.post('/signup', (req, res) => {
 	let firstname = req.body.user.firstname
 	let lastname = req.body.user.lastname
 	let clearpwd = req.body.user.passwd
-
+	console.log(req)
 	const saltrounds = 10
 
 	bcrypt.hash(clearpwd, saltRounds, function(err, hash) {
