@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 elementFormDefault="qualified">
 
-<xs:element name="boker">
+<xs:element name="bok">
   <xs:complexType>
     <xs:sequence>
       <xs:element name="bokID" type="xs:integer"/>
@@ -12,7 +12,7 @@ elementFormDefault="qualified">
   </xs:complexType>
 </xs:element>
 
-<xs:element name="forfattere">
+<xs:element name="forfatter">
   <xs:complexType>
     <xs:sequence>
       <xs:element name="forfatterID" type="xs:integer"/>

@@ -6,6 +6,7 @@ const bodyParser = require("body-parser")
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337 	
 const bcrypt = require('bcrypt')
+const tables = ['forfatter', 'bok'] // used to verify valid table name from request
 
 //app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(xmlparser());
@@ -19,81 +20,51 @@ app.use((req,res,next) => {
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'content-type')
-	console.log('I got here')
 	next()
 })
+
+//test if api is up and running correctly
 app.get('/', (req, res) => res.send('Hello World!'))	
 
-app.get('/forfatter', (req, res) => {
-	var db = new sqlite3.Database('/db/potatoDB.db')
-	db.serialize(() => {
-		db.all('SELECT * FROM Forfatter;', [],(err, rows) => {
-			var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfattere: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {forfatter: rows} }}
-			res.end(o2x(obj))
-		})			
-	})
-	db.close()
+app.get('/:table', (req, res) => {
+	
+	if(tables.includes(req.params['table'].toLowerCase())){
+		let db = new sqlite3.Database('/db/potatoDB.db')
+		db.serialize(() => {
+			db.all(`SELECT * FROM ${req.params['table']}`, [],(err, rows) => {
+				let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {query: rows} }}
+				res.end(o2x(obj))
+			})
+		})
+		db.close()
+	}
+	else{
+		let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {query:null}}
+		res.end(o2x(obj))
+	}
 })
 
 
-app.get('/forfatter/:forfatterID', (req, res) => {
-	let db = new sqlite3.Database('/db/potatoDB.db')
-	db.serialize(() => {
-
-		let stmt = db.prepare('SELECT * FROM Forfatter WHERE forfatterID = (?)', err => {
-			if(err) console.log('DB prepare', err)
-		})
-		console.log('forfatter id:', req.params['forfatterID'])
-		stmt.get(req.params['forfatterID'], (err, row) => {
-			if(err){ console.log(err) }
-			else{
-				var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfatter : row }
-				console.log(row)
-				res.end(o2x(obj))				
-			}
-		})
-		stmt.finalize()
-		db.close()		
-	})
-})
-
-
-app.get('/bok', (req, res) => {
-	var db = new sqlite3.Database('/db/potatoDB.db')
-	db.serialize(() => {
-		db.all('SELECT * FROM Bok;', [],(err, rows) => {
-			var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, boker: {bok : rows }}
-			res.end(o2x(obj))
-		})			
-	})
-	db.close()
-})
-
-
-app.get('/bok/:bokID', (req, res) => {
-	let db = new sqlite3.Database('/db/potatoDB.db')
-	db.serialize(() => {
-
-		let stmt = db.prepare('SELECT * FROM Bok WHERE bokID = (?)', err => {
-			if(err) console.log('DB prepare', err)
-		})
-		console.log('forfatter id:', req.params['forfatterID'])
-		stmt.get(req.params['bokID'], (err, row) => {
-			if(err){
-				console.log(err)
-			}
-			else{
-				var obj = { 
-				  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
-				  bok : row
+app.get('/:table/:id', (req, res) => {
+	
+	if(tables.includes(req.params['table'].toLowerCase())){
+		let db = new sqlite3.Database('/db/potatoDB.db')
+		db.serialize(() => {
+			db.all(`SELECT * FROM ${req.params['table']} WHERE id = ?`, req.params['id'], (err, row) => {
+				if(err){ console.error(err) }
+				else{
+					let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {query: row} }}
+					res.end(o2x(obj))				
 				}
-				console.log(row)
-				res.end(o2x(obj))				
-			}
+			})
+			db.close()		
 		})
-		stmt.finalize()
-		db.close()		
-	})
+	}
+	else{
+		let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {query:null}}
+		res.end(o2x(obj))
+	}
+	
 })
 
 
@@ -107,7 +78,7 @@ app.post('/bok', (req, res) => {
 	if(req.body.bok.forfatterid && req.body.bok.tittel){
 		db.serialize(() => {
 
-			let stmt = db.prepare('INSERT INTO Bok(tittel, forfatterID) VALUES ((?),(?))', err => {
+			let stmt = db.prepare('INSERT INTO Bok(tittel, forfatterID) VALUES (?,?)', err => {
 				if(err) console.log('DB prepare', err)
 			})
 			stmt.run([req.body.bok.tittel[0], req.body.bok.forfatterid[0]], (err, row) => {
@@ -115,8 +86,8 @@ app.post('/bok', (req, res) => {
 					console.log(err)
 				}
 				else{
-					var obj = { 
-					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					let obj = { 
+					  '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null,
 					  oppdatert : 1
 					}
 					console.log(row)
@@ -127,8 +98,8 @@ app.post('/bok', (req, res) => {
 		})
 	}
 	else{
-		var obj = { 
-		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		let obj = { 
+		  '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null,
 		  oppdatert: count
 		}
 		res.send(o2x(obj))
@@ -155,7 +126,7 @@ app.post('/forfatter', (req, res) => {
 					console.log(err)
 				}
 				else{
-					var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert : 1 }
+					let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
 					console.log(row)
 					res.end(o2x(obj))				
 				}
@@ -164,7 +135,7 @@ app.post('/forfatter', (req, res) => {
 		})
 	}
 	else{
-		var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert: 0 }
+		let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert: 0 }
 		res.send(o2x(obj))
 	}
 		
@@ -189,8 +160,8 @@ app.put('/forfatter', (req, res) => {
 					console.log(err)
 				}
 				else{
-					var obj = { 
-					  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+					let obj = { 
+					  '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null,
 					  oppdatert : 1
 					}
 					console.log(row)
@@ -201,8 +172,8 @@ app.put('/forfatter', (req, res) => {
 		})
 	}
 	else{
-		var obj = { 
-		  '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null,
+		let obj = { 
+		  '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null,
 		  oppdatert: 0
 		}
 		res.send(o2x(obj))
@@ -227,7 +198,7 @@ app.put('/bok', (req, res) => {
 			stmt.run([req.body.bok.tittel[0], req.body.bok.forfatterid[0], req.body.bok.bokid[0]], (err, row) => {
 				if(err){ console.log(err) }
 				else{
-					var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert : 1 }
+					let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
 					console.log(row)
 					res.end(o2x(obj))				
 				}
@@ -236,7 +207,7 @@ app.put('/bok', (req, res) => {
 		})
 	}
 	else{
-		var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert: 0 }
+		let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert: 0 }
 		res.send(o2x(obj))
 	}	
 	db.close()
@@ -250,7 +221,7 @@ app.delete('/:tablename', (req, res) => {
 		db.serialize(() => {
 			name = name.charAt(0).toUpperCase() + name.slice(1) // Uppercase first letter
 			db.all(`DELETE FROM ${name};`, [],(err, rows) => {
-				var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, 'status': 'ok'}
+				let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, 'status': 'ok'}
 				res.end(o2x(obj))
 			})			
 		})
@@ -276,7 +247,7 @@ app.delete('/:tablename/:id', (req, res) => {
 				if(err) console.log('DB prepare', err)
 			})
 			stmt.run(id, [],(err, rows) => {
-				var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, 'status': 'ok'}
+				let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, 'status': 'ok'}
 				res.end(o2x(obj))
 			})			
 		})
@@ -302,7 +273,7 @@ app.post('/signup', (req, res) => {
            console.log(err)
          }
          else{
-           var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, oppdatert : 1 }
+           let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
            console.log(row)
            res.end(o2x(obj))
          }
