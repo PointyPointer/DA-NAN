@@ -6,7 +6,6 @@ const bodyParser = require("body-parser")
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337 	
 const bcrypt = require('bcrypt')
-
 //app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(xmlparser());
 // app.use(express.urlencoded());
@@ -15,11 +14,9 @@ app.use(xmlparser());
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
-	res.header('accept', 'application/xml')
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'content-type')
-	console.log('I got here')
 	next()
 })
 app.get('/', (req, res) => res.send('Hello World!'))	
@@ -28,7 +25,7 @@ app.get('/forfatter', (req, res) => {
 	var db = new sqlite3.Database('/db/potatoDB.db')
 	db.serialize(() => {
 		db.all('SELECT * FROM Forfatter;', [],(err, rows) => {
-			var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfattere: {forfatter : rows }}
+			var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfatter : rows }
 			res.end(o2x(obj))
 		})			
 	})
@@ -62,7 +59,7 @@ app.get('/bok', (req, res) => {
 	var db = new sqlite3.Database('/db/potatoDB.db')
 	db.serialize(() => {
 		db.all('SELECT * FROM Bok;', [],(err, rows) => {
-			var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, boker: {bok : rows }}
+			var obj = { '?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, bok : rows }
 			res.end(o2x(obj))
 		})			
 	})
@@ -289,7 +286,7 @@ app.post('/signup', (req, res) => {
 	let firstname = req.body.user.firstname
 	let lastname = req.body.user.lastname
 	let clearpwd = req.body.user.passwd
-	console.log(req)
+
 	const saltrounds = 10
 
 	bcrypt.hash(clearpwd, saltRounds, function(err, hash) {

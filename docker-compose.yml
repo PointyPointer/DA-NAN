@@ -4,7 +4,7 @@ services:
   web:
     build: ./web
     volumes:
-#     - ./web/www:/var/www
+     - ./web/www:/var/www
      - ./web/logs:/var/log
     ports:
       - 80:80
@@ -18,7 +18,9 @@ services:
 
   rest:
     build: ./rest
+    volumes:
+     - ./rest/db:/db/
     ports:
-      - 1337:80
+      - 1337:1337
     depends_on:
       - cgi
