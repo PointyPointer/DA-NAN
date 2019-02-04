@@ -28,7 +28,7 @@ app.get('/forfatter', (req, res) => {
 	var db = new sqlite3.Database('/db/potatoDB.db')
 	db.serialize(() => {
 		db.all('SELECT * FROM Forfatter;', [],(err, rows) => {
-			var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfattere: {forfatter : rows }}
+			var obj = {'?xml version=\"1.0\" encoding=\"iso-8859-1\"?' : null, forfattere: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {forfatter: rows} }}
 			res.end(o2x(obj))
 		})			
 	})

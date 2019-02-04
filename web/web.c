@@ -311,7 +311,7 @@ int getMime(char* filePath, char* buff, FILE* mime){
 
 	while ((read = getline(&buff,&len, mime)) != -1) {
 		if (lineSearchMime(buff, ext)){
-			printf("%s:%s\n", buff, ext);
+			//printf("%s:%s\n", buff, ext);
 			sub = strlen(strchr(buff, (int)'\t'));
 			rewind(mime);
 			return read - sub;			

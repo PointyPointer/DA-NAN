@@ -47,7 +47,7 @@ int writeA(int sd, char* temp, char* filePath){
   strcat(buff, temp);
   strcat(buff, "</a></td>");
 
-  printf("%s\n", buff);
+  //printf("%s\n", buff);
 
   write(sd, buff, strlen(buff));
 
