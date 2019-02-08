@@ -11,6 +11,8 @@ services:
   
   cgi:
     build: ./cgi
+    volumes:
+     - ./cgi/cgi:/usr/local/apache2/cgi-bin/
     ports:
       - 8080:80
     depends_on:
