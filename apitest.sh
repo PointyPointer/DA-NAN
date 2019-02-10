@@ -4,7 +4,7 @@ echo "Enter command";
 
 cmd="help";
 
-while [[ $cmd=="quit" ]]; do
+while [[ $cmd != "quit" ]]; do
 	read cmd;
 	clear;
 
