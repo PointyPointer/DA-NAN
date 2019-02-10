@@ -13,8 +13,15 @@ try:
 
 	else:
 		get = {}
-		for pair in os.environ['QUERY_STRING'].split('&'):
-			get[pair.split('=')[0]] = pair.split('=')[1]
+		if os.environ['QUERY_STRING']:
+			for pair in os.environ['QUERY_STRING'].split('&'):
+				print(os.environ['QUERY_STRING'].split('&'))
+				try:
+					get[pair.split('=')[0]] = pair.split('=')[1]
+				except IndexError as err:
+					print(err)
+		else:
+			get = "Empty response :("
 		print('<div>','GET:', get,'</div>')
 
 except KeyError as err:

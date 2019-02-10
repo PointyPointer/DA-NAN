@@ -3,6 +3,11 @@ import os
 
 print('Content-Type: text/html; charset=utf-8\n')
 
+# Debug
+for k in os.environ:
+	print(k + ' : ' + os.environ[k] + '<br>')
+print('<br>')
+
 try:
 	if 'CONTENT_LENGTH' in os.environ:
 		inp = input()

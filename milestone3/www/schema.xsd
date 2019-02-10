@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="Forfatter">
+<xs:complexType>
+  <xs:sequence>
+    <xs:element name="fornavn" type="xs:string"/>
+    <xs:element name="etternavn" type="xs:string"/>
+    <xs:element name="nasjonalitet" type="xs:string"/>
+    <xs:element name="forfatterID" type="xs:int"/>
+  </xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="Bok">
+<xs:complexType>
+  <xs:sequence>
+    <xs:element name="bokID" type="xs:int"/>
+    <xs:element name="boktittel" type="xs:string"/>
+    <xs:element name="forfatterID" type="xs:int"/>
+  </xs:sequence>
+</xs:complexType>
+</xs:element>
+
+</xs:schema>

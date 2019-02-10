@@ -14,7 +14,8 @@ app.use(xmlparser());
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
-	res.header('Access-Control-Allow-Origin', '*')
+	res.header('Accept', 'application/xml')
+	// res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
 	res.header('Access-Control-Allow-Headers', 'content-type')
 	next()
@@ -281,7 +282,7 @@ app.delete('/:tablename/:id', (req, res) => {
 	db.close()
 })
 
-app.post('/signup', (req, res) => {
+app.post('/signup', (req, res, next) => {
 	let db = new sqlite3.Database('/db/potatoDB.db')
 	let firstname = req.body.user.firstname
 	let lastname = req.body.user.lastname
@@ -311,7 +312,7 @@ app.post('/signup', (req, res) => {
 	})
 })
 
-app.post('/signin', (req, res) => {
+app.post('/signin', (req, res, next) => {
 	let db = new sqlite3.Database('/db/potatoDB.db')
 	let username = req.body.user.username
 	let clearpwd = req.body.user.password

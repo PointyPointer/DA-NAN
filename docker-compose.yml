@@ -4,13 +4,15 @@ services:
   web:
     build: ./web
     volumes:
-     - ./web/www:/var/www
+#     - ./web/www:/var/www
      - ./web/logs:/var/log
     ports:
       - 80:80
   
   cgi:
     build: ./cgi
+    volumes:
+     - ./cgi/cgi:/usr/local/apache2/cgi-bin/
     ports:
       - 8080:80
     depends_on:
