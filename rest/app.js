@@ -14,7 +14,7 @@ const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
   res.header('accept', 'application/xml')
-  res.header('Access-Control-Allow-Origin', '*')
+  // res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'content-type')
   next()
@@ -269,11 +269,11 @@ app.delete('/:tablename/:id', (req, res) => {
 
 app.post('/signup', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
-  let firstname = req.body.user.firstname
-  let lastname = req.body.user.lastname
-  let clearpwd = req.body.user.passwd
+  let firstname = req.body.user.firstname[0]
+  let lastname = req.body.user.lastname[0]
+  let clearpwd = req.body.user.password[0]
   console.log(req)
-  const saltrounds = 10
+  const saltRounds = 10
 
   bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
     db.serialize(() => {
