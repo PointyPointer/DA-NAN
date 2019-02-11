@@ -147,7 +147,7 @@ app.post('/forfatter', (req, res) => {
   db.close()
 })
 
-app.put('/forfatter', (req, res) => {
+app.put('/forfatter/:id', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
   console.log(req.body)
   let sql = 'UPDATE forfatter SET '
@@ -167,9 +167,9 @@ app.put('/forfatter', (req, res) => {
   }
   sql = sql.slice(0, -1)
   sql += 'WHERE forfatterid = ?'
-  options.push(req.body.forfatter.forfatterid[0])
+  options.push(req.params['id'])
   // Check if all fields are present in request
-  if(req.body.forfatter.fornavn || req.body.forfatter.etternavn || req.body.forfatter.nasjonalitet && req.body.forfatter.forfatterid){
+  if(req.body.forfatter.fornavn || req.body.forfatter.etternavn || req.body.forfatter.nasjonalitet && req.params['id']){
     db.serialize(() => {
       db.run(sql, options, (err, row) => {
         if(err){ console.log(err) }
@@ -189,28 +189,28 @@ app.put('/forfatter', (req, res) => {
 })
 
 
-app.put('/bok', (req, res) => {
+app.put('/bok/:id', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
   console.log(req.body)
   let sql
   let options
   if (req.body.bok.tittel && !req.body.bok.forfatterid){
     sql = 'UPDATE bok SET tittel = (?) WHERE bokID = (?)'
-    options = [req.body.bok.tittel[0], req.body.bok.bokid[0]]
+    options = [req.body.bok.tittel[0], req.params['id']]
   }
   else if(!req.body.bok.tittel && req.body.bok.forfatterid){
     sql = 'UPDATE bok SET forfatterID = (?) WHERE bokID = (?)'
-    options = [req.body.bok.forfatterid[0], req.body.bok.bokid[0]]
+    options = [req.body.bok.forfatterid[0], req.params['id']]
   }
   else if(req.body.bok.tittel && req.body.bok.forfatterid){
     sql = 'UPDATE bok SET tittel = (?), forfatterID = (?) WHERE bokID = (?)'
-    options = [req.body.bok.tittel[0], req.body.bok.forfatterid[0], req.body.bok.bokid[0]]
+    options = [req.body.bok.tittel[0], req.body.bok.forfatterid[0], req.params['id']]
   }
   else{
     next()
   }
   // Check if all fields are present in request
-  if(req.body.bok.bokid && req.body.bok.tittel || req.body.bok.forfatterid){
+  if(req.params['id'] && req.body.bok.tittel || req.body.bok.forfatterid){
     db.serialize(() => {
       db.run(sql, options, (err, row) => {
         if(err){ console.log(err) }
