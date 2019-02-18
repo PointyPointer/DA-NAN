@@ -3,18 +3,22 @@ const app = express()
 const o2x = require('object-to-xml')
 const parseString = require('xml2js').parseString
 const bodyParser = require("body-parser")
+const cookieParser = require('cookie-parser')
 const xmlparser = require('express-xml-bodyparser')
 const port = 1337   
 const bcrypt = require('bcrypt')
+const crypto = require('crypto') // Node in-built crypto libary
 const tables = ['forfatter', 'bok'] // used to verify valid table name from request
 
 app.use(xmlparser())
+app.use(cookieParser())
+
 
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
   res.header('accept', 'application/xml')
-  // res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'content-type')
   next()
@@ -280,7 +284,7 @@ app.post('/signup', (req, res) => {
       let stmt = db.prepare('INSERT INTO Bruker(passordhash, fornavn, etternavn) VALUES ((?),(?),(?))', err => {
          if(err) console.log('DB prepare', err)
         })
-      stmt.run([hash, firstname, req.body.lastname], (err, row) => {
+      stmt.run([hash, firstname, lastname], (err, row) => {
          if(err){
            console.log(err)
          }
@@ -297,27 +301,49 @@ app.post('/signup', (req, res) => {
   })
 })
 
-app.post('/signin', (req, res, next) => {
+app.post('/login', (req, res, next) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
-  let username = req.body.user.username
-  let clearpwd = req.body.user.password
+  let username = req.body.user.username[0]
+  let clearpwd = req.body.user.password[0]
   let hashpwd
+  let retobj = {'?xml version="1.0" encoding="UTF-8"?': null}
+
+  console.log("Cookie: ", req.cookies)
+
 
   db.serialize(() => {
-    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = ((?))', err => {
+    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = ?', err => {
       if(err) console.log('DB prepare', err)
     })
     stmt.get(username, [], (err, row) => {
       if(err) console.log(err)
-      hashpwd = row.passordhash     
-    })  
+      hashpwd = row.passordhash
+
+      bcrypt.compare(clearpwd, hashpwd, (err, success) => {
+        if (err) throw err
+        if(success === true) {
+          crypto.randomBytes(256, (err, buf) => {
+            if (err) throw err
+            retobj.sessionID = buf.toString('base64')
+            console.log("send response")
+            res.cookie('sessionID', buf.toString('base64')).send(o2x(retobj))
+
+          })
+
+          // db.serialize(() => {
+          // })  test
+        } 
+        else{ 
+          console.log("No match")
+          res.end(o2x(retobj)) 
+
+        }
+      })    
+    }) 
+ 
+    stmt.finalize()
   })
-  bcrypt.compare(clearpwd, hashpwd, (err, res) => {
-    if(res === true) {
-      db.serialize(() => {
-      })  
-    } 
-  })
+
   db.close()
 })
 

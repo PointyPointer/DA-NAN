@@ -31,6 +31,7 @@
     "object-to-xml": "^2.0.0",
     "python": "0.0.4",
     "sqlite3": "^4.0.6",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "cookie-parser": "^1.4.4"
   }
 }

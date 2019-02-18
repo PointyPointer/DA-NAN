@@ -52,10 +52,8 @@ Mkfile.old
 dkms.conf
 
 # personal
-*.db
-*.log
-*/*.log
-*/web
-*/*/web
-*/static_web
-*/node_modules
+**/*.db
+**/*.log
+**/web
+**/static_web
+**/node_modules

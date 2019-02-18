@@ -33,7 +33,7 @@
 			return alert('Passwords do not match')
 		}
 
-		xhr.open("POST","http://128.39.166.99:1337/signup",true)
+		xhr.open("POST","http://testmaskin:1337/signup",true)
 		xhr.setRequestHeader("Content-type","application/xml")
 
 		xmlDocument = "<user><firstname>"+firstname+"</firstname><lastname>"+lastname+"</lastname><password>"+passwd1+"</password></user>"
