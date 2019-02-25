@@ -54,6 +54,6 @@ dkms.conf
 # personal
 **/*.db
 **/*.log
-**/web
+web/etc/web
 **/static_web
 **/node_modules
