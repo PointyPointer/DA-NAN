@@ -40,7 +40,7 @@ app.get('/:table', (req, res) => {
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
       db.all(sql, [],(err, rows) => {
-        let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {query: rows} }}
+        let obj = {'?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://testmaskin/api.xsd'},'#' : {query: rows} }}
         res.end(o2x(obj))
       })
     })
@@ -66,7 +66,7 @@ app.get('/:table/:id', (req, res) => {
       db.all(sql, req.params['id'], (err, row) => {
         if(err){ console.error(err) }
         else{
-          let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://127.0.0.1/api.xsd'},'#' : {query: row} }}
+          let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, request: {'@':{schemaLocation:'http://testmaskin/api.xsd'},'#' : {query: row} }}
           res.end(o2x(obj))       
         }
       })
