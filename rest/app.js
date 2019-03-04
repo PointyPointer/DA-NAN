@@ -1,14 +1,16 @@
 const express = require('express')
-const app = express()
 const o2x = require('object-to-xml')
 const parseString = require('xml2js').parseString
 const bodyParser = require("body-parser")
 const cookieParser = require('cookie-parser')
 const xmlparser = require('express-xml-bodyparser')
-const port = 1337   
 const bcrypt = require('bcrypt')
 const crypto = require('crypto') // Node in-built crypto libary
+
+const port = 1337
 const tables = ['forfatter', 'bok'] // used to verify valid table name from request
+
+const app = express()
 
 app.use(xmlparser())
 app.use(cookieParser())
@@ -273,6 +275,7 @@ app.delete('/:tablename/:id', (req, res) => {
 
 app.post('/signup', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
+  let username = req.body.user.userid[0]
   let firstname = req.body.user.firstname[0]
   let lastname = req.body.user.lastname[0]
   let clearpwd = req.body.user.password[0]
@@ -281,11 +284,15 @@ app.post('/signup', (req, res) => {
 
   bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
     db.serialize(() => {
-      let stmt = db.prepare('INSERT INTO Bruker(passordhash, fornavn, etternavn) VALUES ((?),(?),(?))', err => {
+      let stmt = db.prepare('INSERT INTO Bruker(brukerID, passordhash, fornavn, etternavn) VALUES ((?),(?),(?),(?))', err => {
          if(err) console.log('DB prepare', err)
         })
-      stmt.run([hash, firstname, lastname], (err, row) => {
+      stmt.run([username, hash, firstname, lastname], (err, row) => {
          if(err){
+            if(err.code = "SQLITE_CONSTRAINT"){
+              let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 0 }
+              res.end(o2x(obj))
+            }
            console.log(err)
          }
          else{
@@ -301,7 +308,7 @@ app.post('/signup', (req, res) => {
   })
 })
 
-app.post('/login', (req, res, next) => {
+app.post('/signin', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
   let username = req.body.user.username[0]
   let clearpwd = req.body.user.password[0]
@@ -351,4 +358,4 @@ app.get('/logout', (req, res) => {
 
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Rest API listening on port ${port}!`))
