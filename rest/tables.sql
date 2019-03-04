@@ -17,7 +17,7 @@ CREATE TABLE Bok (
 );
 
 CREATE TABLE Bruker ( 
-  brukerID INTEGER PRIMARY KEY AUTOINCREMENT, 
+  brukerID varchar(100) PRIMARY KEY, 
   passordhash TEXT(64), 
   fornavn VARCHAR(100), 
   etternavn VARCHAR(100)

@@ -336,9 +336,7 @@ app.post('/login', (req, res, next) => {
             crypto.randomBytes(256, (err, buf) => {
               if (err) throw err
               retobj.sessionID = buf.toString('base64')
-              console.log("send response")
               res.cookie('sessionid', buf.toString('base64')).end(o2x(retobj))
-
             })
 
             // db.serialize(() => {

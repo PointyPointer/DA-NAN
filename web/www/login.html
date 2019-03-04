@@ -17,7 +17,7 @@
 </body>
 <script>
 	function signin() {
-		window.location.href = "/signin.html"
+		window.location.href = "/signup.html"
 	}
 
 	function submit() {
@@ -30,12 +30,11 @@
 
 		username = document.getElementById("un").value
 		passwd = document.getElementById("pw").value
-		xmlDocument = "<user>\n\t<username>" + username + "</username>\n\t<password>" + passwd + "</password>\n</user>"
+		xmlDocument = "<user><username>" + username + "</username><password>" + passwd + "</password></user>"
 		console.log(xmlDocument)		
 		xhr.send(xmlDocument)
 		xhr.onreadystatechange = function() { 
 			if (xhr.readyState === 4 && xhr.status === 200) {
-				console.log(xhr)
         		//window.location.href = "/index.html"
 			}
 		}
