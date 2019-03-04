@@ -3,11 +3,33 @@
 function edit(c1, c2, elId){
 	console.log("editing - not implemented yet")
 	c1.innerHTML = "Endret :)"
+	// Get the modal
+	let modal = document.getElementById('myModal');
+
+	// Get the <span> element that closes the modal
+	let span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks on the button, open the modal 
+	 modal.style.display = "block";
+
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+	  modal.style.display = "none";
+	}
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	  if (event.target == modal) {
+	    modal.style.display = "none";
+	  }
+	}
+
 }
 
-function deleteEl(c1, c2, elId){
-	console.log("delete - not implemented yet")
-
+function deleteEl(row, elId){
+	row.parentElement.removeChild(row)
+	xhttp.open("DELETE", "http://testmaskin:1337/forfatter/" + elId)
+	xhttp.send()
 }
 
 function add(tableid, first, second, elId) {
@@ -34,7 +56,7 @@ function add(tableid, first, second, elId) {
   deletebn.style = "font-size:16px; margin-left: 5px;"
   
   deletebn.onclick = () => {
-  	deleteEl(cell1, cell2)
+  	deleteEl(row, elId)
   }
   
   cell3.appendChild(editbn) 
@@ -43,6 +65,9 @@ function add(tableid, first, second, elId) {
 
 // Code running on loading
 console.log('Running init')
+
+window.authors = {}
+window.books = {}
 
 
 let parser = new DOMParser()
@@ -60,6 +85,8 @@ xhttp.onreadystatechange = function() {
 	    		list[i].getElementsByTagName('nasjonalitet')[0].innerHTML, 
 	    		list[i].getElementsByTagName('forfatterID')[0].innerHTML
 	    	)
+
+	    	// Send request to get books
 	    	xhttp.open("GET", "http://testmaskin:1337/bok")
 			xhttp.send()
    	 	}
@@ -78,3 +105,5 @@ xhttp.onreadystatechange = function() {
 
 xhttp.open("GET", "http://testmaskin:1337/forfatter")
 xhttp.send()
+
+

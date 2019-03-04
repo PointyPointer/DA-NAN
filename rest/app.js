@@ -10,15 +10,17 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto') // Node in-built crypto libary
 const tables = ['forfatter', 'bok'] // used to verify valid table name from request
 
-app.use(xmlparser())
 app.use(cookieParser())
+
+app.use(xmlparser())
 
 
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
   res.header('accept', 'application/xml')
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header('Access-Control-Allow-Origin', 'http://testmaskin')
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'content-type')
   next()
@@ -308,37 +310,47 @@ app.post('/login', (req, res, next) => {
   let hashpwd
   let retobj = {'?xml version="1.0" encoding="UTF-8"?': null}
 
+  console.log("User: ", username, "; Password: ", clearpwd)
   console.log("Cookie: ", req.cookies)
 
 
   db.serialize(() => {
-    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = ?', err => {
+    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = (?)', err => {
       if(err) console.log('DB prepare', err)
     })
     stmt.get(username, [], (err, row) => {
       if(err) console.log(err)
-      hashpwd = row.passordhash
 
-      bcrypt.compare(clearpwd, hashpwd, (err, success) => {
-        if (err) throw err
-        if(success === true) {
-          crypto.randomBytes(256, (err, buf) => {
-            if (err) throw err
-            retobj.sessionID = buf.toString('base64')
-            console.log("send response")
-            res.cookie('sessionID', buf.toString('base64')).send(o2x(retobj))
+      if (!row){
+        console.log("No match")
+        res.end(o2x(retobj)) 
+      }
+      else{
 
-          })
+        console.log(row)
+        hashpwd = row.passordhash
 
-          // db.serialize(() => {
-          // })  test
-        } 
-        else{ 
-          console.log("No match")
-          res.end(o2x(retobj)) 
+        bcrypt.compare(clearpwd, hashpwd, (err, success) => {
+          if (err) throw err
+          if(success === true) {
+            crypto.randomBytes(256, (err, buf) => {
+              if (err) throw err
+              retobj.sessionID = buf.toString('base64')
+              console.log("send response")
+              res.cookie('sessionid', buf.toString('base64')).end(o2x(retobj))
 
-        }
-      })    
+            })
+
+            // db.serialize(() => {
+            // })  test
+          } 
+          else{ 
+            console.log("No match")
+            res.end(o2x(retobj)) 
+
+          }
+        })
+      }    
     }) 
  
     stmt.finalize()
