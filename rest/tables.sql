@@ -25,7 +25,7 @@ CREATE TABLE Bruker (
 );
 
 CREATE TABLE Sesjon ( 
-  sesjonsID TEXT(128), 
+  sesjonsID TEXT(256), 
   brukerID INTEGER,
 
   PRIMARY KEY (sesjonsID),

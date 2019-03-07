@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sign up</title>
+</head>
+<body>
+
+	<h1>Sign up</h1>
+
+	<div>
+		Username/nickname<br>
+		<input id="nick" type="text" name="nick"><br>
+		First Name<br>
+		<input id="fn" type="text" name="firstName"><br>
+		Last Name<br>
+		<input id="ln" type="text" name="lastName"><br>
+		Password<br>
+		<input id="pw1" type="password" name="passwd1"><br>
+		Type password again<br>
+		<input id="pw2" type="password" name="passwd2"><br>
+		<button onclick="submit()">Submit</button><br>
+	<div>
+</body>
+<script>
+	function submit() {
+		var nickname = document.getElementById('nick').value
+		var firstname = document.getElementById('fn').value
+		var lastname = document.getElementById('ln').value
+		var passwd1 = document.getElementById('pw1').value
+		var passwd2 = document.getElementById('pw2').value
+		var xhr = new XMLHttpRequest()
+		var xmlDocument
+		
+		if(passwd1.localeCompare(passwd2) !== 0) {
+			return alert('Passwords do not match')
+		}
+		xhr.open("POST","http://testmaskin:1337/signup",true)
+		xhr.setRequestHeader("Content-type","application/xml")
+		xmlDocument = `	<user>
+							<brukerID>${nickname}</brukerID>
+							<firstname>${firstname}</firstname>
+							<lastname>${lastname}</lastname>
+							<password>${passwd1}</password>
+						</user>`
+		console.log(xmlDocument)
+		xhr.send(xmlDocument)
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				window.location.href = "/login.html"
+			}
+		}
+	}
+</script>
+</html>

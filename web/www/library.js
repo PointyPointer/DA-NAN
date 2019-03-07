@@ -58,10 +58,12 @@ function createAuthorForm(){
 
 	sub.onclick = (event) => {
 		document.getElementById('myModal').style.display = "none";
-		window.location.reload(false);
+		
 		xhttp.open("POST", "http://testmaskin:1337/forfatter")
 		xhttp.setRequestHeader("Content-Type", "text/xml");
 		xhttp.send(`<forfatter><fornavn>${fn.value}</fornavn><etternavn>${en.value}</etternavn><nasjonalitet>${na.value}</nasjonalitet></forfatter>`)
+		window.location.reload(false);
+
 	}
 
 	return test
@@ -99,10 +101,11 @@ function createBookForm(){
 
 	sub.onclick = (event) => {
 		document.getElementById('myModal').style.display = "none";
-		window.location.reload(false);
 		xhttp.open("POST", "http://testmaskin:1337/bok")
 		xhttp.setRequestHeader("Content-Type", "text/xml");
 		xhttp.send(`<bok><tittel>${ti.value}</tittel><forfatterID>${se.value}</forfatterID></bok>`)
+		window.location.reload(false);
+
 	}
 
 	return test
@@ -127,13 +130,16 @@ function edit(table, c1, c2, elId){
 
 		test[4].onclick = (event) => {
 			document.getElementById('myModal').style.display = "none";
-			window.location.reload(false);
 			if (test[1].value !== ti) ret += `<tittel>${test[1].value}</tittel>`
 			if (test[3].value !== se) ret += `<forfatterID>${test[3].value}</forfatterID>`
+			
 
 			xhttp.open("PUT", "http://testmaskin:1337/bok/" + elId)
 			xhttp.setRequestHeader("Content-Type", "text/xml");
 			xhttp.send(ret + '</bok>')
+
+			window.location.reload(false);
+
 		}
 	}
 	else if (table === 'forfatter'){
@@ -153,15 +159,18 @@ function edit(table, c1, c2, elId){
 
 		test[6].onclick = (event) => {
 			document.getElementById('myModal').style.display = "none";
-			window.location.reload(false);
 			if (test[1].value !== fn) ret += `<fornavn>${test[1].value}</fornavn>`
 			if (test[3].value !== en) ret += `<etternavn>${test[3].value}</etternavn>`
 			if (test[5].value !== na) ret += `<nasjonalitet>${test[5].value}</nasjonalitet>`
 
 
+
 			xhttp.open("PUT", "http://testmaskin:1337/forfatter/" + elId)
 			xhttp.setRequestHeader("Content-Type", "text/xml");
 			xhttp.send(ret + '</forfatter>')
+
+			window.location.reload(false);
+
 		}
 
 
@@ -228,6 +237,8 @@ window.bok = {}
 let parser = new DOMParser()
 
 let xhttp = new XMLHttpRequest()
+xhttp.withCredentials = true
+
 xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     let txt = this.responseText
@@ -262,4 +273,15 @@ xhttp.onreadystatechange = function() {
 xhttp.open("GET", "http://testmaskin:1337/forfatter")
 xhttp.send()
 
+window.onload = () => {
+	let user = 'gjest'
+	document.cookie.split(';').filter((item) => {
+		console.log(item.trim().startsWith('username='))
+		if(item.trim().startsWith('username=')){
+	    	user = item.trim().split('=')[1]
+		}
+	})
+	document.getElementById('username').innerHTML = user
+
+}
 

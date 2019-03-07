@@ -38,9 +38,9 @@ tr:nth-child(odd) {
 
 
 .myheader {
-	padding: 2px 16px;
+	padding: 5px 16px;
 	background-color: #5cb85c;
-	color: white;
+	color: black;
 }
 
 
