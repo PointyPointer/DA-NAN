@@ -52,7 +52,7 @@ Mkfile.old
 dkms.conf
 
 # personal
-**/*.db
+*.db
 **/*.log
 web/etc/web
 **/static_web

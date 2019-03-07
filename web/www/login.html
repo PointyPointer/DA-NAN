@@ -23,8 +23,10 @@
 	function submit() {
 		var xmlDocument
 		var xhr = new XMLHttpRequest()
+		console.log(xhr)
 		xhr.open("POST","http://testmaskin:1337/login",true)
-		xhr.setRequestHeader("Content-type","application/xml")
+		xhr.withCredentials = true
+		xhr.setRequestHeader("Content-type","text/xml")
 
 		username = document.getElementById("un").value
 		passwd = document.getElementById("pw").value
@@ -33,7 +35,7 @@
 		xhr.send(xmlDocument)
 		xhr.onreadystatechange = function() { 
 			if (xhr.readyState === 4 && xhr.status === 200) {
-      	// window.location.href = "/index.html"
+        		//window.location.href = "/index.html"
 			}
 		}
 	}

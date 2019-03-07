@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Library</title>
+	<title>Bibliotek</title>
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="/library.js"></script>
 </head>
 <body>
-	<h1>My libary</h1>
-	<i id="test" class="fa fa-spinner fa-spin"></i>
-	<h2>Author</h2>
-	<table id="author">
+	<div id="header" class="myheader"><h1><a href="/">Startside</a> > Mitt bibliotek</h1><span>Paalogget som: <b id="username"></b></span></div>
+	<!-- <i id="test" class="fa fa-spinner fa-spin"></i> -->
+	<h2>Forfatter</h2>
+	<button onclick="createAuthorForm()">Legg til forfatter</button>
+	<table id="forfatter">
 		<tr>
-			<th>Name</th>
-			<th>Nationality</th>
-			<th>Options</th>
+			<th>Navn</th>
+			<th>Nasjonalitet</th>
+			<th>Rediger/slett</th>
 		</tr>
 	</table>
 	<h2>Book</h2>
-	<table id="book">
+	<button onclick="createBookForm()">Legg til bok</button>
+	<table id="bok">
 		<tr>
-			<th>Title</th>
-			<th>Author</th>
-			<th>Options</th>
+			<th>Tittel</th>
+			<th>Forfatter</th>
+			<th>Rediger/slett</th>
 		</tr>
 	</table>
-	<button onclick="add('author','Henrik Ibsen', 'Norsk')">Click me</button>
+
+	<!-- The Modal -->
+	<div id="myModal" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+		  <div class="modal-header">
+		    <span class="close">&times;</span>
+		    <h2 id="modalhead"></h2>
+		  </div>
+		  <div id="modalbody" class="modal-body"></div>
+		</div>
+	</div>
 
 
 </body>

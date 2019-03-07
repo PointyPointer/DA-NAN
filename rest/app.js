@@ -1,29 +1,122 @@
 const express = require('express')
+const app = express()
 const o2x = require('object-to-xml')
 const parseString = require('xml2js').parseString
 const bodyParser = require("body-parser")
 const cookieParser = require('cookie-parser')
 const xmlparser = require('express-xml-bodyparser')
+const port = 1337   
 const bcrypt = require('bcrypt')
 const crypto = require('crypto') // Node in-built crypto libary
-
-const port = 1337
 const tables = ['forfatter', 'bok'] // used to verify valid table name from request
 
-const app = express()
+app.use(cookieParser())
 
 app.use(xmlparser())
-app.use(cookieParser())
 
 
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
+  // console.log(req.cookies)
+
   res.header('accept', 'application/xml')
-  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header('Access-Control-Allow-Origin', 'http://testmaskin')
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'content-type')
-  next()
+  if(req.method === 'OPTIONS')
+    res.send(null)
+  else
+    next()
+    
+})
+
+app.post('/signup', (req, res) => {
+  let db = new sqlite3.Database('/db/potatoDB.db')
+  let firstname = req.body.user.firstname[0]
+  let lastname = req.body.user.lastname[0]
+  let clearpwd = req.body.user.password[0]
+  console.log(req)
+  const saltRounds = 10
+
+  bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
+    db.serialize(() => {
+      let stmt = db.prepare('INSERT INTO Bruker(passordhash, fornavn, etternavn) VALUES ((?),(?),(?))', err => {
+         if(err) console.log('DB prepare', err)
+        })
+      stmt.run([hash, firstname, lastname], (err, row) => {
+         if(err){
+           console.log(err)
+         }
+         else{
+           let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
+           console.log(row)
+           res.end(o2x(obj))
+         }
+       })
+       stmt.finalize()
+
+    })
+    db.close()
+  })
+})
+
+app.post('/login', (req, res, next) => {
+  let db = new sqlite3.Database('/db/potatoDB.db')
+  let username = req.body.user.username[0]
+  let clearpwd = req.body.user.password[0]
+  let hashpwd
+  let retobj = {'?xml version="1.0" encoding="UTF-8"?': null}
+
+  console.log("User: ", username, "; Password: ", clearpwd)
+  console.log("Cookie: ", req.cookies)
+
+
+  db.serialize(() => {
+    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = (?)', err => {
+      if(err) console.log('DB prepare', err)
+    })
+    stmt.get(username, [], (err, row) => {
+      if(err) console.log(err)
+
+      if (!row){
+        console.log("No match")
+        res.end(o2x(retobj)) 
+      }
+      else{
+
+        console.log(row)
+        hashpwd = row.passordhash
+
+        bcrypt.compare(clearpwd, hashpwd, (err, success) => {
+          if (err) throw err
+          if(success === true) {
+            crypto.randomBytes(256, (err, buf) => {
+              if (err) throw err
+              retobj.sessionID = buf.toString('base64')
+              res.cookie('sessionID', buf.toString('base64'))
+              res.cookie('username', username).end(o2x(retobj))
+            })
+
+            // Need to store session id
+
+            // db.serialize(() => {
+            // })  test
+          } 
+          else{ 
+            console.log("No match")
+            res.end(o2x(retobj)) 
+
+          }
+        })
+      }    
+    }) 
+ 
+    stmt.finalize()
+  })
+
+  db.close()
 })
 
 //test if api is up and running correctly
@@ -80,6 +173,18 @@ app.get('/:table/:id', (req, res) => {
   
 })
 
+// Check if user is logged in
+app.use((req,res,next) => {
+  //Temporary loggincheck;; TODO: Replace with DB Check
+  if(req.cookies.sessionID){
+    console.log('Innlogget')
+    next()
+  }
+  else{
+    console.log('Ikke innlogget')
+    res.send('Not logged in')
+  }
+})
 
 app.post('/bok', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
@@ -273,89 +378,10 @@ app.delete('/:tablename/:id', (req, res) => {
   db.close()
 })
 
-app.post('/signup', (req, res) => {
-  let db = new sqlite3.Database('/db/potatoDB.db')
-  let username = req.body.user.userid[0]
-  let firstname = req.body.user.firstname[0]
-  let lastname = req.body.user.lastname[0]
-  let clearpwd = req.body.user.password[0]
-  console.log(req)
-  const saltRounds = 10
 
-  bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
-    db.serialize(() => {
-      let stmt = db.prepare('INSERT INTO Bruker(brukerID, passordhash, fornavn, etternavn) VALUES ((?),(?),(?),(?))', err => {
-         if(err) console.log('DB prepare', err)
-        })
-      stmt.run([username, hash, firstname, lastname], (err, row) => {
-         if(err){
-            if(err.code = "SQLITE_CONSTRAINT"){
-              let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 0 }
-              res.end(o2x(obj))
-            }
-           console.log(err)
-         }
-         else{
-           let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
-           console.log(row)
-           res.end(o2x(obj))
-         }
-       })
-       stmt.finalize()
-
-    })
-    db.close()
-  })
-})
-
-app.post('/signin', (req, res) => {
-  let db = new sqlite3.Database('/db/potatoDB.db')
-  let username = req.body.user.username[0]
-  let clearpwd = req.body.user.password[0]
-  let hashpwd
-  let retobj = {'?xml version="1.0" encoding="UTF-8"?': null}
-
-  console.log("Cookie: ", req.cookies)
-
-
-  db.serialize(() => {
-    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = ?', err => {
-      if(err) console.log('DB prepare', err)
-    })
-    stmt.get(username, [], (err, row) => {
-      if(err) console.log(err)
-      hashpwd = row.passordhash
-
-      bcrypt.compare(clearpwd, hashpwd, (err, success) => {
-        if (err) throw err
-        if(success === true) {
-          crypto.randomBytes(256, (err, buf) => {
-            if (err) throw err
-            retobj.sessionID = buf.toString('base64')
-            console.log("send response")
-            res.cookie('sessionID', buf.toString('base64')).send(o2x(retobj))
-
-          })
-
-          // db.serialize(() => {
-          // })  test
-        } 
-        else{ 
-          console.log("No match")
-          res.end(o2x(retobj)) 
-
-        }
-      })    
-    }) 
- 
-    stmt.finalize()
-  })
-
-  db.close()
-})
 
 app.get('/logout', (req, res) => {
 
 })
 
-app.listen(port, () => console.log(`Rest API listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
