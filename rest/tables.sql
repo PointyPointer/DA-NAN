@@ -26,7 +26,7 @@ CREATE TABLE Bruker (
 
 CREATE TABLE Sesjon ( 
   sesjonsID TEXT(256), 
-  brukerID INTEGER,
+  brukerID varchar(100),
 
   PRIMARY KEY (sesjonsID),
   FOREIGN KEY (brukerID) REFERENCES Bruker (brukerID)

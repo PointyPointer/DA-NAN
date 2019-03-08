@@ -34,6 +34,7 @@ app.use((req,res,next) => {
 
 app.post('/signup', (req, res) => {
   let db = new sqlite3.Database('/db/potatoDB.db')
+	let username = req.body.user.userid[0]
   let firstname = req.body.user.firstname[0]
   let lastname = req.body.user.lastname[0]
   let clearpwd = req.body.user.password[0]
@@ -42,22 +43,24 @@ app.post('/signup', (req, res) => {
 
   bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
     db.serialize(() => {
-      let stmt = db.prepare('INSERT INTO Bruker(passordhash, fornavn, etternavn) VALUES ((?),(?),(?))', err => {
-         if(err) console.log('DB prepare', err)
-        })
-      stmt.run([hash, firstname, lastname], (err, row) => {
-         if(err){
-           console.log(err)
-         }
-         else{
-           let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
-           console.log(row)
-           res.end(o2x(obj))
-         }
-       })
-       stmt.finalize()
+      let stmt = db.prepare('INSERT INTO Bruker(brukerID, passordhash, fornavn, etternavn) VALUES ((?),(?),(?),(?))', err => {
+        if(err) console.log('DB prepare', err)
+      })
+      stmt.run([username, hash, firstname, lastname], (err, row) => {
+        if(err){
+					let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 0 }
+					console.log('oppdatert = 0')
+					res.end(o2x(obj))
+				}
+        else{
+          let obj = { '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null, oppdatert : 1 }
+          console.log(row)
+          res.end(o2x(obj))
+        }
+      })
+      stmt.finalize()
 
-    })
+		})
     db.close()
   })
 })
@@ -74,14 +77,18 @@ app.post('/login', (req, res, next) => {
 
 
   db.serialize(() => {
-    let stmt = db.prepare('SELECT fornavn, passordhash FROM Bruker WHERE fornavn = (?)', err => {
+    let stmt = db.prepare('SELECT brukerID, passordhash FROM Bruker WHERE brukerID = (?)', err => {
       if(err) console.log('DB prepare', err)
     })
+		let stmt2 = db.prepare('INSERT INTO Sesjon(sesjonsID, brukerID) VALUES ((?),(?))', err => {
+			if(err) console.log('DB prepare2', err)
+		})
     stmt.get(username, [], (err, row) => {
       if(err) console.log(err)
 
       if (!row){
         console.log("No match")
+				retobj.oppdatert = 0
         res.end(o2x(retobj)) 
       }
       else{
@@ -91,21 +98,24 @@ app.post('/login', (req, res, next) => {
 
         bcrypt.compare(clearpwd, hashpwd, (err, success) => {
           if (err) throw err
-          if(success === true) {
+          if(success) {
             crypto.randomBytes(256, (err, buf) => {
               if (err) throw err
               retobj.sessionID = buf.toString('base64')
               res.cookie('sessionID', buf.toString('base64'))
               res.cookie('username', username).end(o2x(retobj))
+
+							stmt2.run([buf.toString('base64'), username], (err, row) => {
+								console.log('Updated')
+								retobj.oppdatert = 1
+								res.end(o2x(retobj))
+							})
+							stmt2.finalize()
             })
-
-            // Need to store session id
-
-            // db.serialize(() => {
-            // })  test
           } 
           else{ 
             console.log("No match")
+						retobj.oppdatert = 0
             res.end(o2x(retobj)) 
 
           }
