@@ -148,8 +148,14 @@ app.get('/:table', (req, res) => {
 
 app.get('/:table/:id', (req, res) => {
   let sql;
-  if(req.params['table'] === 'forfatter')
-    sql = 'SELECT * FROM forfatter WHERE forfatterID = ?'
+  if(req.params['table'] === 'forfatter'){
+		if (isNaN(req.params['id'])){
+			sql = 'SELECT * FROM forfatter WHERE etternavn = ?'
+		}
+		else{
+    	sql = 'SELECT * FROM forfatter WHERE forfatterID = ?'
+		}
+	}
   else
     sql = 'SELECT * FROM bok WHERE bokID = ?'
   
@@ -176,6 +182,8 @@ app.get('/:table/:id', (req, res) => {
 // Check if user is logged in
 app.use((req,res,next) => {
   //Temporary loggincheck;; TODO: Replace with DB Check
+	console.log('In user check')	 
+	
   if(req.cookies.sessionID){
     console.log('Innlogget')
     next()
