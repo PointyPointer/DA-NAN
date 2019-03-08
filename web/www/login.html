@@ -13,6 +13,7 @@
 		<input id="pw"type="password" name="passwd"><br>
 		<button onclick="submit()">Submit</button>
 		<button onclick="signin()">Sign up</button><br>
+		<div id="msg" style="color:red;"></div>
 	</div>
 </body>
 <script>
@@ -34,8 +35,11 @@
 		console.log(xmlDocument)		
 		xhr.send(xmlDocument)
 		xhr.onreadystatechange = function() { 
-			if (xhr.readyState === 4 && xhr.status === 200) {
-        		//window.location.href = "/index.html"
+			if (xhr.readyState === 4 ) {
+        		    if (xhr.status === 200)
+				window.location.href = "/library.html"
+			    else if(xhr.status === 401)
+				document.getElementById('msg').innerHTML = 'Wrong username/password'
 			}
 		}
 	}

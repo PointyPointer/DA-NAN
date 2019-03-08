@@ -82,7 +82,7 @@ app.post('/login', (req, res, next) => {
 
       if (!row){
         console.log("No match")
-        res.end(o2x(retobj)) 
+        res.status(401).end(o2x(retobj)) 
       }
       else{
 
@@ -183,8 +183,14 @@ app.get('/:table/:id', (req, res) => {
 app.use((req,res,next) => {
   //Temporary loggincheck;; TODO: Replace with DB Check
 	console.log('In user check')	 
-	
+	let sql = "SELECT brukerID WHERE sesjonsID = ?"
   if(req.cookies.sessionID){
+		let db = new sqlite3.Database('/db/potatoDB.db')
+		db.serialize( () => {
+			db.all(sql, req.cookies.sessionID, (err, row) => {
+				res.cookie('brukerID', row.brukerID)
+			}
+		}
     console.log('Innlogget')
     next()
   }
