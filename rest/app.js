@@ -84,16 +84,16 @@ app.post('/login', (req, res, next) => {
 			if(err) console.log('DB prepare2', err)
 		})
     stmt.get(username, [], (err, row) => {
-      if(err) console.log(err)
+      if(err) console.log('GET stmt', err)
 
       if (!row){
         console.log("No match")
 				retobj.oppdatert = 0
-        res.end(o2x(retobj)) 
+				res.end(o2x(retobj)) 
       }
       else{
 
-        console.log(row)
+        console.log('Success!\n', row)
         hashpwd = row.passordhash
 
         bcrypt.compare(clearpwd, hashpwd, (err, success) => {
@@ -105,28 +105,57 @@ app.post('/login', (req, res, next) => {
               res.cookie('sessionID', buf.toString('base64'))
               res.cookie('username', username).end(o2x(retobj))
 
-							stmt2.run([buf.toString('base64'), username], (err, row) => {
-								console.log('Updated')
+							stmt2.run([retobj.sessionID, username], (err, row) => {
+								console.log('Updated!')
 								retobj.oppdatert = 1
 								res.end(o2x(retobj))
 							})
-							stmt2.finalize()
-            })
-          } 
-          else{ 
-            console.log("No match")
-						retobj.oppdatert = 0
-            res.end(o2x(retobj)) 
-
+						})
           }
-        })
-      }    
-    }) 
- 
+					else { 
+						console.log('No match')
+						retobj.oppdatert = 0
+						res.end(o2x(retobj)) 
+					}
+				})
+			}
+		})
     stmt.finalize()
+		stmt2.finalize()
   })
 
   db.close()
+})
+
+app.delete('/logout', (req, res) => {
+	let db = new sqlite3.Database('/db/potatoDB.db')
+
+	let username = req.cookies.username
+	let sessionid = req.cookies.sessionID
+
+	let retobj = {'?xml version\"1.0\" encoding\"UTF-8\"?' : null}
+
+	db.serialize(() => {
+		let stmt = db.prepare('DELETE FROM Sesjon WHERE sesjonID=((?))', err => {
+			if (err) console.log('stmt prepare', err)
+		})
+
+		stmt.run([sessionid], (err, row) => {
+			if (err) console.log('Failed to remove session', err)
+			if (!row) {
+				console.log('Session does not exist', err)
+				retobj.oppdatert = 0
+				res.end(o2x(retobj))
+			}
+			else {
+				console.log('Session removed')
+				retobj.oppdatert = 1
+				res.end(retobj)
+			}
+		})
+		stmt.finalize()
+	})
+	db.close()
 })
 
 //test if api is up and running correctly
@@ -394,12 +423,6 @@ app.delete('/:tablename/:id', (req, res) => {
     })
   }
   db.close()
-})
-
-
-
-app.get('/logout', (req, res) => {
-
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
