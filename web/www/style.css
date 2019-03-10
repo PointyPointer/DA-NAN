@@ -25,6 +25,7 @@ button {
 	padding: 10px;
 	background-color: #CCCCCC;
 	margin: 5px 0px;
+	border-radius: .8rem;
 }
 
 table {
@@ -34,6 +35,13 @@ table {
 
 tr:nth-child(odd) {
   background-color: #CCCCCC;
+}
+
+#forfatter.hide tr > *:nth-child(3) {
+    display: none;
+}
+#bok.hide tr > *:nth-child(3) {
+    display: none;
 }
 
 
