@@ -106,7 +106,8 @@ app.post('/login', (req, res, next) => {
             crypto.randomBytes(256, (err, buf) => {
               if (err) throw err
               db2.serialize(() => {
-                db2.run('INSERT INTO Sesjon(sesjonsID, brukerID) VALUES ((?),(?))', [retobj.sessionID, username], (err) => {
+                db2.run('INSERT INTO Sesjon(sesjonsID, brukerID) VALUES (?, ?)', [buf.toString('base64'), username], (err) => {
+                  console.log('ERROR!!!!!', err)
                   if (!err){
                     retobj.sessionID = buf.toString('base64')
                     res.cookie('sessionID', buf.toString('base64'), {maxAge: 360000})
