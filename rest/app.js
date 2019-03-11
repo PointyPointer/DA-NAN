@@ -228,12 +228,14 @@ app.get('/:table/:id', (req, res) => {
 // Check if user is logged in
 app.use((req,res,next) => {
   //Temporary loggincheck;; TODO: Replace with DB Check
-	console.log('In user check')	 
+  console.log('In user check')
+  console.log(req.cookies.sessionID)	 
 	
   if(req.cookies.sessionID){
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
       db.get('SELECT brukerID FROM Sesjon WHERE sesjonsID = ?', [req.cookies.sessionID], (err, row) => {
+        console.log('ERROR HENG ME I HELVETE', err)
         console.log('Cookie:', req.cookies.sessionID)
         console.log('Row:', row)
         // res.cookie('')
