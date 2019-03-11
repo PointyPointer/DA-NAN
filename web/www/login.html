@@ -2,28 +2,52 @@
 <html>
 <head>
 	<title>Log in</title>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 </head>
-<body>
+<body onload="cookie()">
 
 	<h1>Welcome to PotatoDB :)</h1>
-	<div>
-		User Name<br>
+	<div id="login">
+		Brukernavn<br>
 		<input id="un"type="text" name="userName"><br>
-		Password<br>
+		Passord<br>
 		<input id="pw"type="password" name="passwd"><br>
-		<button onclick="submit()">Submit</button>
-		<button onclick="signin()">Sign up</button><br>
+		<button onclick="login()">Login</button>
+		<button onclick="signup()">Lag bruker</button><br>
+		<div id="errormsg" style="color:red"></div>
+	</div>
+	<div id="logout" style="display:none">
+		<div>Du er logget pa som:
+			<b id="username"></b>
+		</div>
+		<div>Vil du logge ut?</div>
+		<button onclick="logout()">Log ut</button>
+		
 	</div>
 </body>
 <script>
-	function signin() {
+	function cookie() {
+		let username, sessionID
+
+		document.cookie.split(';').forEach((cookie) => {
+			let [key,value] = cookie.split('=').map(a => a.trim())
+			if(key === 'sessionID'){
+				document.getElementById("login").style = "display:none"
+				document.getElementById("logout").style = "display:block"
+			} 
+			if(key=== 'username'){
+				document.getElementById("username").innerHTML = value
+			}
+		})
+	}
+
+	function signup() {
 		window.location.href = "/signup.html"
 	}
 
-	function submit() {
+	function login() {
 		var xmlDocument
 		var xhr = new XMLHttpRequest()
-		console.log(xhr)
 		xhr.open("POST","http://testmaskin:1337/login",true)
 		xhr.withCredentials = true
 		xhr.setRequestHeader("Content-type","text/xml")
@@ -31,12 +55,33 @@
 		username = document.getElementById("un").value
 		passwd = document.getElementById("pw").value
 		xmlDocument = "<user><username>" + username + "</username><password>" + passwd + "</password></user>"
-		console.log(xmlDocument)		
 		xhr.send(xmlDocument)
 		xhr.onreadystatechange = function() { 
 			if (xhr.readyState === 4 && xhr.status === 200) {
-        		//window.location.href = "/index.html"
+        		window.location.href = "/index.html"
 			}
+			else if(xhr.readyState === 4)
+				document.getElementById("errormsg").innerHTML = "Feil brukernavn/passord"
+
+		}
+	}
+	function logout() {
+		var xmlDocument
+		var xhr = new XMLHttpRequest()
+		xhr.open("DELETE","http://testmaskin:1337/logout",true)
+		xhr.withCredentials = true
+		xhr.setRequestHeader("Content-type","text/xml")
+
+		username = document.getElementById("un").value
+		passwd = document.getElementById("pw").value
+		xmlDocument = "<user><username>" + username + "</username><password>" + passwd + "</password></user>"
+		xhr.send(null)
+		xhr.onreadystatechange = function() { 
+			if (xhr.readyState === 4 && xhr.status === 200) {
+        		window.location.href = "/index.html"
+			}
+			else if(xhr.readyState === 4)
+				document.getElementById("errormsg").innerHTML = "Feil brukernavn/passord"
 		}
 	}
 </script>

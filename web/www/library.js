@@ -84,7 +84,6 @@ function createBookForm(){
 	let se = document.createElement("select");
 
 	for (var id in window.forfatter) {
-		console.log(window.forfatter)
 		let op = document.createElement("option");
 		op.value = id
 		op.innerHTML = window.forfatter[id]['navn']
@@ -113,14 +112,10 @@ function createBookForm(){
 
 function edit(table, c1, c2, elId){
 	let test;
-
-
 	if (table === 'bok'){
 		let ti = c1
 		let se = c2
 		let ret = '<bok>'
-
-		console.log('t', se)
 
 		test = createBookForm()
 		document.getElementById('modalhead').innerHTML = "Rediger"
@@ -163,27 +158,18 @@ function edit(table, c1, c2, elId){
 			if (test[3].value !== en) ret += `<etternavn>${test[3].value}</etternavn>`
 			if (test[5].value !== na) ret += `<nasjonalitet>${test[5].value}</nasjonalitet>`
 
-
-
 			xhttp.open("PUT", "http://testmaskin:1337/forfatter/" + elId)
 			xhttp.setRequestHeader("Content-Type", "text/xml");
 			xhttp.send(ret + '</forfatter>')
 
 			window.location.reload(false);
-
 		}
-
-
 	}
-
-	console.log(test)
-
 }
 
 function deleteEl(row, table, elId){
 	row.parentElement.removeChild(row)
 
-	console.log("http://testmaskin:1337/"+ table +"/" + elId)
 	xhttp.open("DELETE", `http://testmaskin:1337/${table}/${elId}`)
 	xhttp.send()
 }
@@ -215,6 +201,9 @@ function add(tableid, first, second, elId) {
   	deleteEl(row, tableid, elId)
   }
   
+  cell3.class = 'isauth'
+  editbn.class = 'isauth'
+  deletebn.class = 'isauth'
   cell3.appendChild(editbn) 
   cell3.appendChild(deletebn)
 
@@ -228,8 +217,6 @@ function add(tableid, first, second, elId) {
 }
 
 // Code running on loading
-console.log('Running init')
-
 window.forfatter = {}
 window.bok = {}
 
@@ -251,11 +238,10 @@ xhttp.onreadystatechange = function() {
 	    		list[i].getElementsByTagName('nasjonalitet')[0].innerHTML, 
 	    		list[i].getElementsByTagName('forfatterID')[0].innerHTML
 	    	)
-
-	    	// Send request to get books
-	    	xhttp.open("GET", "http://testmaskin:1337/bok")
-			xhttp.send()
    	 	}
+   	 	// Send request to get books
+	    xhttp.open("GET", "http://testmaskin:1337/bok")
+		xhttp.send()
     }
     if(this.responseURL === 'http://testmaskin:1337/bok'){
     	for (let i = list.length - 1; i >= 0; i--) {
@@ -275,13 +261,26 @@ xhttp.send()
 
 window.onload = () => {
 	let user = 'gjest'
+	let sessionID = null
 	document.cookie.split(';').filter((item) => {
-		console.log(item.trim().startsWith('username='))
 		if(item.trim().startsWith('username=')){
 	    	user = item.trim().split('=')[1]
 		}
+		else if(item.trim().startsWith('sessionID=')){
+			sessionID = item.trim().split('=')[1]
+		}
 	})
 	document.getElementById('username').innerHTML = user
+
+	if(!sessionID){
+		for (var i = document.getElementsByClassName('isauth').length - 1; i >= 0; i--) {
+			document.getElementsByClassName('isauth').item(i).style = 'display: none'
+		}
+
+		document.getElementById("forfatter").classList.toggle("hide")
+		document.getElementById("bok").classList.toggle("hide")
+
+	}
 
 }
 

@@ -7,10 +7,20 @@
 	<script type="text/javascript" src="/library.js"></script>
 </head>
 <body>
-	<div id="header" class="myheader"><h1><a href="/">Startside</a> > Mitt bibliotek</h1><span>Paalogget som: <b id="username"></b></span></div>
+	<div id="header" class="myheader">
+		<button 
+			style="float: right; _display: inline;" 
+			onclick="location.href = '/login.html';">
+				Login/Logout
+		</button>
+		<h1><a href="/">Startside</a> > Mitt bibliotek</h1>
+		<span>Paalogget som: <b id="username"></b></span>
+
+
+	</div>
 	<!-- <i id="test" class="fa fa-spinner fa-spin"></i> -->
 	<h2>Forfatter</h2>
-	<button onclick="createAuthorForm()">Legg til forfatter</button>
+	<button onclick="createAuthorForm()" class="isauth">Legg til forfatter</button>
 	<table id="forfatter">
 		<tr>
 			<th>Navn</th>
@@ -19,7 +29,7 @@
 		</tr>
 	</table>
 	<h2>Book</h2>
-	<button onclick="createBookForm()">Legg til bok</button>
+	<button onclick="createBookForm()" class="isauth">Legg til bok</button>
 	<table id="bok">
 		<tr>
 			<th>Tittel</th>
