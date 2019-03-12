@@ -1,25 +1,27 @@
 <html>
 	<head>
 		<title>HTML test page</title>
+		<link rel="stylesheet" type="text/css" href="/style.css">
 	</head>
 <body>
-	<h1>Hjemmesiden til Peter, Magnus og Sigurd</h1>
-	<div>
-		<a href="/">Go to root</a>
+	<div id="header" class="myheader">
+		<h1>Hjemmesiden til Peter, Magnus og Sigurd</h1>
 	</div>
-	<div>
-		<a href="http://testmaskin:8080/hallo.sh">Go to cgi</a>
+	<div class="content">
+		<button onclick="location.href = '/';">
+			Katalogviser
+		</button>
+		<button onclick="location.href = 'http://testmaskin:8080/hallo.sh';">
+			CGI
+		</button>
+		<button onclick="location.href = '/library.html';">
+			Biblotek
+		</button>
+
+		<p>The server handles stuff</p>
+
+
+		<img src="test.jpg" height="242" width="442">
 	</div>
-	<div>
-		<a href="/library.html">Library</a>
-	</div>
-
-
-	
-
-	<p>The server handles stuff</p>
-
-
-	<img src="test.jpg" height="242" width="442">
 </body>
 </html>

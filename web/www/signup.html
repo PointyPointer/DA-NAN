@@ -8,8 +8,8 @@
 	<h1>Sign up</h1>
 
 	<div>
-		Username/nickname<br>
-		<input id="nick" type="text" name="nick"><br>
+		User name<br>
+		<input id="un" type="text" name="userName"><br>
 		First Name<br>
 		<input id="fn" type="text" name="firstName"><br>
 		Last Name<br>
@@ -23,30 +23,34 @@
 </body>
 <script>
 	function submit() {
-		var nickname = document.getElementById('nick').value
+		var username = document.getElementById('un').value
 		var firstname = document.getElementById('fn').value
 		var lastname = document.getElementById('ln').value
 		var passwd1 = document.getElementById('pw1').value
 		var passwd2 = document.getElementById('pw2').value
+
 		var xhr = new XMLHttpRequest()
 		var xmlDocument
-		
+
 		if(passwd1.localeCompare(passwd2) !== 0) {
 			return alert('Passwords do not match')
 		}
+
 		xhr.open("POST","http://testmaskin:1337/signup",true)
 		xhr.setRequestHeader("Content-type","application/xml")
-		xmlDocument = `	<user>
-							<brukerID>${nickname}</brukerID>
-							<firstname>${firstname}</firstname>
-							<lastname>${lastname}</lastname>
-							<password>${passwd1}</password>
-						</user>`
+
+		xmlDocument = "<user><userid>"+username+"</userid><firstname>"+firstname+"</firstname><lastname>"+lastname+"</lastname><password>"+passwd1+"</password></user>"
 		console.log(xmlDocument)
 		xhr.send(xmlDocument)
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState === 4 && xhr.status === 200) {
-				window.location.href = "/login.html"
+				console.log(xhr.responseXML)
+				if(xhr.responseXML.getElementsByTagName('oppdatert')[0].childNodes[0].nodeValue == 0) {
+					alert("Username already exist!\nPlease choose another one")
+				} else {
+					alert("User successfully created!\nRedirecting to login page")
+					window.location.href = "/login.html"
+				}
 			}
 		}
 	}

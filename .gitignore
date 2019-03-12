@@ -52,6 +52,7 @@ Mkfile.old
 dkms.conf
 
 # personal
+rest/db/*
 milestone3/web
 *web
 *.db
