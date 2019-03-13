@@ -1,4 +1,5 @@
 body {
+	margin: 0px;
 }
 
 /*table, th, td {
@@ -44,6 +45,9 @@ tr:nth-child(odd) {
     display: none;
 }
 
+.content {
+	margin: 10px;
+}
 
 .myheader {
 	padding: 5px 16px;

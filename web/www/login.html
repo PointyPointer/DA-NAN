@@ -12,12 +12,13 @@
 		<input id="un"type="text" name="userName"><br>
 		Passord<br>
 		<input id="pw"type="password" name="passwd"><br>
+
 		<button onclick="login()">Login</button>
 		<button onclick="signup()">Lag bruker</button><br>
 		<div id="errormsg" style="color:red"></div>
 	</div>
 	<div id="logout" style="display:none">
-		<div>Du er logget pa som:
+		<div>Innlogget bruker:
 			<b id="username"></b>
 		</div>
 		<div>Vil du logge ut?</div>
@@ -80,8 +81,6 @@
 			if (xhr.readyState === 4 && xhr.status === 200) {
         		window.location.href = "/index.html"
 			}
-			else if(xhr.readyState === 4)
-				document.getElementById("errormsg").innerHTML = "Feil brukernavn/passord"
 		}
 	}
 </script>

@@ -220,10 +220,10 @@ function add(tableid, first, second, elId) {
 window.forfatter = {}
 window.bok = {}
 
-
 let parser = new DOMParser()
 
 let xhttp = new XMLHttpRequest()
+// Allows sending cookies to api
 xhttp.withCredentials = true
 
 xhttp.onreadystatechange = function() {
@@ -241,7 +241,7 @@ xhttp.onreadystatechange = function() {
    	 	}
    	 	// Send request to get books
 	    xhttp.open("GET", "http://testmaskin:1337/bok")
-		xhttp.send()
+		  xhttp.send()
     }
     if(this.responseURL === 'http://testmaskin:1337/bok'){
     	for (let i = list.length - 1; i >= 0; i--) {

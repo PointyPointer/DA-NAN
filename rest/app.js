@@ -18,8 +18,6 @@ app.use(xmlparser())
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
-  // console.log(req.cookies)
-
   res.header('accept', 'application/xml')
   res.header('Access-Control-Allow-Credentials', 'true')
   res.header('Access-Control-Allow-Origin', 'http://testmaskin')
@@ -230,11 +228,11 @@ app.get('/:table/:id', (req, res) => {
 app.use((req,res,next) => {
   //Temporary loggincheck;; TODO: Replace with DB Check
 	console.log('In user check')	 
-	
+	let sql = "SELECT brukerID WHERE sesjonsID = ?"
   if(req.cookies.sessionID){
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
-      db.get('SELECT brukerID FROM Sesjon WHERE sesjonsID = ?', [req.cookies.sessionID], (err, row) => {
+      db.get(sql, [req.cookies.sessionID], (err, row) => {
         console.log('Cookie:', req.cookies.sessionID)
         console.log('Row:', row)
         // res.cookie('')
@@ -247,14 +245,9 @@ app.use((req,res,next) => {
           console.log('Ikke innlogget')
           logoutUser(res)
         }
-
       })
-
     })
   }
-
-
-  //res.status(401).send('Not logged in')
 })
 
 app.post('/bok', (req, res) => {
