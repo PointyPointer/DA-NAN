@@ -18,8 +18,6 @@ app.use(xmlparser())
 const sqlite3 = require('sqlite3').verbose()
 // const h = new XMLHttpRequest()Responsen
 app.use((req,res,next) => {
-  // console.log(req.cookies)
-
   res.header('accept', 'application/xml')
   res.header('Access-Control-Allow-Credentials', 'true')
   res.header('Access-Control-Allow-Origin', 'http://testmaskin')
@@ -106,7 +104,8 @@ app.post('/login', (req, res, next) => {
             crypto.randomBytes(256, (err, buf) => {
               if (err) throw err
               db2.serialize(() => {
-                db2.run('INSERT INTO Sesjon(sesjonsID, brukerID) VALUES ((?),(?))', [retobj.sessionID, username], (err) => {
+                db2.run('INSERT INTO Sesjon(sesjonsID, brukerID) VALUES (?, ?)', [buf.toString('base64'), username], (err) => {
+                  console.log('ERROR!!!!!', err)
                   if (!err){
                     retobj.sessionID = buf.toString('base64')
                     res.cookie('sessionID', buf.toString('base64'), {maxAge: 360000})
@@ -228,14 +227,12 @@ app.get('/:table/:id', (req, res) => {
 // Check if user is logged in
 app.use((req,res,next) => {
   //Temporary loggincheck;; TODO: Replace with DB Check
-  console.log('In user check')
-  console.log(req.cookies.sessionID)	 
-	
+	console.log('In user check')	 
+	let sql = "SELECT brukerID WHERE sesjonsID = ?"
   if(req.cookies.sessionID){
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
-      db.get('SELECT brukerID FROM Sesjon WHERE sesjonsID = ?', [req.cookies.sessionID], (err, row) => {
-        console.log('ERROR HENG ME I HELVETE', err)
+      db.get(sql, [req.cookies.sessionID], (err, row) => {
         console.log('Cookie:', req.cookies.sessionID)
         console.log('Row:', row)
         // res.cookie('')
@@ -248,14 +245,9 @@ app.use((req,res,next) => {
           console.log('Ikke innlogget')
           logoutUser(res)
         }
-
       })
-
     })
   }
-
-
-  //res.status(401).send('Not logged in')
 })
 
 app.post('/bok', (req, res) => {
