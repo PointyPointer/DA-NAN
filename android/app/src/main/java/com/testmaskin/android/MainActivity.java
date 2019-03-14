@@ -27,17 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
         wv = findViewById(R.id.web_view);
         wv.getSettings().setJavaScriptEnabled(true);
-        wv.loadUrl("http://testmaskin:80/");
-        wv.setWebViewClient(new MyWebViewClient() {
-            @Override
-            public void onPageFinished (WebView view, String url) {
-                cookies = CookieManager.getInstance().getCookie(url);
-            }
-        });
+        wv.loadUrl("http://testmaskin:80/library.html");
+        wv.setWebViewClient(new WebViewClient());
+//        wv.setWebViewClient(new MyWebViewClient() {
+//            @Override
+//            public void onPageFinished (WebView view, String url) {
+//                cookies = CookieManager.getInstance().getCookie(url);
+//            }
+//        });
 
         TextView name = findViewById(R.id.toolbar_title);
-//        name.setText(firstName + " " + lastName);
-        name.setText(cookies);
+        name.setText(firstName + " " + lastName);
+//        name.setText(cookies);
     }
 
     @Override
