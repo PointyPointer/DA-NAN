@@ -18,8 +18,7 @@ print ('<h2> Hent en post </h2>')
 print ('<form method= "GET"> BokID: <input type="text" name="BokID"> <input type="submit" value="Hent post">')
 print ('<input type = "radio" name = "sokevalgA" value = "Bok" /> BokID')
 print ('<input type = "radio" name = "sokevalgB" value = "Forfatter" /> Forfatter </form>')
-#random kommentar for å repushe
-#random kommentar 2 AHH
+
 
 form = cgi.FieldStorage()
 
