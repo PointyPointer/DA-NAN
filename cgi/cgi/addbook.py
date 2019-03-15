@@ -15,6 +15,7 @@ print ('<HEAD><TITLE>Heng Me</TITLE></HEAD>')
 print ('<BODY>')
 print('asifbawp', file=sys.stderr)
 
+print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
 session_id=False
 if ('HTTP_COOKIE' in environ):
    for cookie in environ['HTTP_COOKIE'].split(';'):

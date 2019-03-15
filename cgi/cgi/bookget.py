@@ -12,6 +12,8 @@ print ()
 print ('<HTML>')
 print ('<HEAD><TITLE>Hovedmeny</TITLE></HEAD>')
 print ('<BODY>')
+
+print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
 print ('<H1> Hovedmeny til potetgreia </H1>')
 print ('</br>') 
 print ('<h2> Hent en post </h2>')
