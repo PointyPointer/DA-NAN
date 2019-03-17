@@ -208,13 +208,34 @@ function add(tableid, first, second, elId) {
   cell3.appendChild(deletebn)
 
   if (tableid === 'bok'){
-  	window.bok[elId] = {'tittel': first, 'forfatter': window.forfatter[1]['navn'], 'forfatterID': second}
+  	let forfatterNavn = window.forfatter[second] ? window.forfatter[second]['navn'] : second
+  	window.bok[elId] = {'tittel': first, 'forfatter': forfatterNavn, 'forfatterID': second}
+  	console.log(second)
   }
   else if(tableid === 'forfatter'){
   	window.forfatter[elId] = {'navn': first, 'nasjonalitet': second}
   }
 
 }
+
+function deleteBooks(){
+	xhttp.open("DELETE", "http://testmaskin:1337/bok")
+	xhttp.setRequestHeader("Content-Type", "text/xml");
+	xhttp.send(null)
+	window.bok = {}
+	window.location.reload(false);
+}
+function deleteAuthors(){
+	xhttp.open("DELETE", "http://testmaskin:1337/forfatter")
+	xhttp.setRequestHeader("Content-Type", "text/xml");
+	xhttp.send(null)
+	window.forfatter = {}
+	window.location.reload(false);
+}
+
+
+
+
 
 // Code running on loading
 window.forfatter = {}
@@ -230,10 +251,11 @@ xhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
     let txt = this.responseText
     let list = parser.parseFromString(txt, "text/xml").getElementsByTagName('query')
-
+    console.log(txt)
     if(this.responseURL === 'http://testmaskin:1337/forfatter'){
     	for (let i = list.length - 1; i >= 0; i--) {
-	    	add('forfatter', 
+	    	console.log(list[i].getElementsByTagName('fornavn'))
+		add('forfatter', 
 	    		list[i].getElementsByTagName('fornavn')[0].innerHTML + ' ' + list[i].getElementsByTagName('etternavn')[0].innerHTML, 
 	    		list[i].getElementsByTagName('nasjonalitet')[0].innerHTML, 
 	    		list[i].getElementsByTagName('forfatterID')[0].innerHTML

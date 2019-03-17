@@ -5,6 +5,7 @@
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="/library.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
 	<div id="header" class="myheader">
@@ -14,7 +15,7 @@
 				Login/Logout
 		</button>
 		<h1><a href="/">Startside</a> > Mitt bibliotek</h1>
-		<span>Paalogget som: <b id="username"></b></span>
+		<span>Pålogget som: <b id="username"></b></span>
 
 
 	</div>
@@ -22,6 +23,7 @@
 	<!-- <i id="test" class="fa fa-spinner fa-spin"></i> -->
 	<h2>Forfatter</h2>
 	<button onclick="createAuthorForm()" class="isauth">Legg til forfatter</button>
+	<button onclick="deleteAuthors()" class="isauth">Slett alle forfattere</button>
 	<table id="forfatter">
 		<tr>
 			<th>Navn</th>
@@ -31,6 +33,7 @@
 	</table>
 	<h2>Book</h2>
 	<button onclick="createBookForm()" class="isauth">Legg til bok</button>
+	<button onclick="deleteBooks()" class="isauth">Slett alle bøker</button>
 	<table id="bok">
 		<tr>
 			<th>Tittel</th>

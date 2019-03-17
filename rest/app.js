@@ -30,6 +30,19 @@ app.use((req,res,next) => {
     
 })
 
+// Check if value is of type. If value is an array, it 
+// check if all values in array is of the specified type
+// Needed for type checking when inserting data in sqlite3 DB
+// which have no strict typematching
+function checkValue(val, type='string'){
+	if(val && typeof val === 'object' && Array.isArray(val))
+		return val.every(entry => typeof entry === type || typeof entry === 'number' && Number(entry))
+	
+	else if(val && typeof val === type)
+		return true
+
+	return false
+}
 
 function logoutUser(res, status=401) {
   res.cookie('sessionID', '', {maxAge: -1})
@@ -43,7 +56,6 @@ app.post('/signup', (req, res) => {
   let firstname = req.body.user.firstname[0]
   let lastname = req.body.user.lastname[0]
   let clearpwd = req.body.user.password[0]
-  console.log(req)
   const saltRounds = 10
 
   bcrypt.hash(clearpwd, saltRounds, (err, hash) => {
@@ -226,17 +238,12 @@ app.get('/:table/:id', (req, res) => {
 
 // Check if user is logged in
 app.use((req,res,next) => {
-  //Temporary loggincheck;; TODO: Replace with DB Check
-	console.log('In user check')	 
-	let sql = "SELECT brukerID WHERE sesjonsID = ?"
-  if(req.cookies.sessionID){
+	let sql = "SELECT brukerID FROM Sesjon WHERE sesjonsID = ?"
+  
+	if(req.cookies.sessionID){
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
       db.get(sql, [req.cookies.sessionID], (err, row) => {
-        console.log('Cookie:', req.cookies.sessionID)
-        console.log('Row:', row)
-        // res.cookie('')
-        // res.end(o2x(obj))
         if(row){
           console.log('Innlogget')
           next()
@@ -248,6 +255,10 @@ app.use((req,res,next) => {
       })
     })
   }
+	else{
+		console.log('Need login')
+		logoutUser(res)
+	}
 })
 
 app.post('/bok', (req, res) => {
@@ -257,8 +268,8 @@ app.post('/bok', (req, res) => {
 
   
   // Check if all fields are present in request
-  if(req.body.bok.forfatterid && req.body.bok.tittel){
-    db.serialize(() => {
+  if(checkValue(req.body.bok.forfatterid, 'number') && checkValue(req.body.bok.tittel, 'string')){ 
+		db.serialize(() => {
 
       let stmt = db.prepare('INSERT INTO Bok(tittel, forfatterID) VALUES (?,?)', err => {
         if(err) console.log('DB prepare', err)
@@ -280,9 +291,11 @@ app.post('/bok', (req, res) => {
     })
   }
   else{
+
     let obj = { 
       '?xml version=\"1.0\" encoding=\"UTF-8\"?' : null,
-      oppdatert: count
+      oppdatert: count,
+			melding: "Error in input, may be missing values or not excpected types"
     }
     res.send(o2x(obj))
   }
@@ -297,8 +310,11 @@ app.post('/forfatter', (req, res) => {
 
   
   // Check if all fields are present in request
-  if(req.body.forfatter.fornavn && req.body.forfatter.etternavn && req.body.forfatter.nasjonalitet){
-    db.serialize(() => {
+  if( checkValue( req.body.forfatter.fornavn, 'string') && 
+		  checkValue( req.body.forfatter.etternavn, 'string') && 
+			checkValue( req.body.forfatter.nasjonalitet, 'string')) {
+    
+		db.serialize(() => {
 
       let stmt = db.prepare('INSERT INTO Forfatter(fornavn, etternavn, nasjonalitet) VALUES ((?),(?),(?))', err => {
         if(err) console.log('DB prepare', err)
@@ -385,7 +401,7 @@ app.put('/bok/:id', (req, res) => {
     next()
   }
   // Check if all fields are present in request
-  if(req.params['id'] && req.body.bok.tittel || req.body.bok.forfatterid){
+  if(req.params['id'] && req.body.bok.tittel || checkValue(req.body.bok.forfatterid , 'number')){
     db.serialize(() => {
       db.run(sql, options, (err, row) => {
         if(err){ console.log(err) }

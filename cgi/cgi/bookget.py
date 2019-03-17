@@ -12,6 +12,9 @@ print ()
 print ('<HTML>')
 print ('<HEAD><TITLE>Hovedmeny</TITLE></HEAD>')
 print ('<BODY>')
+
+print(open('../html/header.txt').read())
+
 print ('<H1> Hovedmeny til potetgreia </H1>')
 print ('</br>') 
 print ('<h2> Hent en post </h2>')

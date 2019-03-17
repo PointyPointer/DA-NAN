@@ -1,0 +1,5 @@
+<div>
+	<button onclick="location.href='/login.py'">Login script</button>
+	<button onclick="location.href='/addbook.py'" >Add book/author(POST test)</button>
+	<button onclick="location.href='/bookget.py'" >Get book/author(GET test)</button>
+</div>
