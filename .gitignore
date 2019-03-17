@@ -59,4 +59,5 @@ milestone3/web
 **/*.log
 web/etc/web
 **/static_web
-**/node_modules
+e*/node_modules
+**/*.swp

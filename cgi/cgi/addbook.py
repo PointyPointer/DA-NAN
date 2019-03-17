@@ -6,6 +6,7 @@ import cgitb
 import re
 import sys
 from os import environ
+from xml.dom.minidom import parseString
 cgitb.enable()
 
 print ('Content-Type: text/html; charset=utf-8\n')
@@ -15,6 +16,7 @@ print ('<HEAD><TITLE>Heng Me</TITLE></HEAD>')
 print ('<BODY>')
 print('asifbawp', file=sys.stderr)
 
+print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
 session_id=False
 if ('HTTP_COOKIE' in environ):
    for cookie in environ['HTTP_COOKIE'].split(';'):
@@ -22,12 +24,20 @@ if ('HTTP_COOKIE' in environ):
       print(key,value)
       if key == "sessionID":
          session_id = value
-        
+def get_val_from_xml(element, tagname):
+    return element.getElementsByTagName(tagname)[0].firstChild.nodeValue
+
+forfattere = parseString(requests.get('http://rest:1337/forfatter').text).getElementsByTagName('query')
+forfattere = {get_val_from_xml(f, 'forfatterID') :get_val_from_xml(f, 'fornavn') +' '+ get_val_from_xml(f, 'etternavn') for f in forfattere } 
 
 print ('<H1> Hater livet </H1>')
 print ('</br>') 
 print ('<h2> Legg til en bok </h2>')
-print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<input type = "text" name = "ForfatterNavn" id = "ForfatterNavn"> <input type="submit" value="Legg til" id = "submit" > </form>')
+print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<select name="ForfatterNavn"')
+for fID in forfattere:
+    print(f'<option value="{fID}">{forfattere[fID]}</option>')
+print('</select> <input type="submit" value="Legg til" id = "submit" > </form>')
+print('<H2>Legg til forfatter</H2>')
 print ('<form method="POST"> Fornavn: <input type = "text" name = "ForfatterFornavn" id = "ForfatterFornavn"> <br> Etternavn:<input type = "text" name = "ForfatterEtternavn" id = "ForfatterEtternavn"> Nasjonalitet: <input type = "text" name = "ForfatterNasjon" id = "ForfatterNasjon"> <input type="submit" value="Legg til" id = "submit" > </form>')
 
 form = cgi.FieldStorage()

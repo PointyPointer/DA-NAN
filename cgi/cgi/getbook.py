@@ -13,16 +13,14 @@ print ('<HTML>')
 print ('<HEAD><TITLE>Hovedmeny</TITLE></HEAD>')
 print ('<BODY>')
 
-print(open('../html/header.txt').read())
-
+print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
 print ('<H1> Hovedmeny til potetgreia </H1>')
 print ('</br>') 
 print ('<h2> Hent en post </h2>')
 print ('<form method= "GET"> BokID: <input type="text" name="BokID"> <input type="submit" value="Hent post">')
 print ('<input type = "radio" name = "sokevalgA" value = "Bok" /> BokID')
 print ('<input type = "radio" name = "sokevalgB" value = "Forfatter" /> Forfatter </form>')
-#random kommentar for å repushe
-#random kommentar 2 AHH
+
 
 form = cgi.FieldStorage()
 
