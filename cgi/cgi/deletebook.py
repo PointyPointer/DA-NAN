@@ -33,9 +33,18 @@ url = False
 print('<br>')
 if "tittel" in form:
     bID = form.getvalue('tittel')
-    ForfatterNavn = form.getvalue('ForfatterNavn')
-    xml = f'<bok><tittel>{bID}</tittel><forfatterID>{ForfatterNavn}<forfatterID></bok>'
+    xml = f'<bok><tittel>{bID}</tittel></bok>'
     url = 'http://rest:1337/bok/' + bID
+elif "forfatter" in form:
+    fID = form.getvalue('forfatter')
+    xml = f'<bok><forfatterID>{fID}</forfatterID></bok>'
+    url = 'http://rest:1337/forfatter/' + fID
+elif "bokslett" in form:
+    xml = f'<bok></bok>'
+    url = 'http://rest:1337/bok'
+elif "forfatterslett" in form:
+    xml = f'<bok><forfatterID> </forfatterID></bok>'
+    url = 'http://rest:1337/forfatter/'
 
 
 
@@ -59,6 +68,28 @@ for bID in bok:
 print ('</select>')
 print ('<input type = "submit" value="submit">')
 print ('</form>')
+
+print('<br>')
+
+print ('<form method="POST" name="boktittel" id="boktittel">')
+print ('<select name = "forfatter">')
+for fID in forfattere:
+    f=forfattere[fID]
+    print(f'<option value = "{fID}"> {f["fornavn"]} {f["etternavn"]} </option>')
+print ('</select>')
+print ('<input type = "submit" value="submit">')
+print ('</form>')
+
+print ('<br>')
+
+print ('<form method="POST" name="bokslett" id="bokslett">')
+print ('<input type = "submit" name ="bokslett" value="Slett Alle Bøker">')
+print ('</form>')
+
+print ('<form method="POST" name="forfatterslett" id="forfatterslett">')
+print ('<input type = "submit" name="forfatterslett" value="Slett Alle Forfattere">')
+print ('</form>')
+
 
 #legg til submit med post og slette funksjon
 #spør om databasen er ryddet opp i
