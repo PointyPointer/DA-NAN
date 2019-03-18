@@ -62,7 +62,11 @@ function createAuthorForm(){
 		xhttp.open("POST", "http://testmaskin:1337/forfatter")
 		xhttp.setRequestHeader("Content-Type", "text/xml");
 		xhttp.send(`<forfatter><fornavn>${fn.value}</fornavn><etternavn>${en.value}</etternavn><nasjonalitet>${na.value}</nasjonalitet></forfatter>`)
-		window.location.reload(false);
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				window.location.reload(false);
+			}
+		}	
 
 	}
 
@@ -103,8 +107,11 @@ function createBookForm(){
 		xhttp.open("POST", "http://testmaskin:1337/bok")
 		xhttp.setRequestHeader("Content-Type", "text/xml");
 		xhttp.send(`<bok><tittel>${ti.value}</tittel><forfatterID>${se.value}</forfatterID></bok>`)
-		window.location.reload(false);
-
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				window.location.reload(false);
+			}
+		}
 	}
 
 	return test
@@ -116,6 +123,9 @@ function edit(table, c1, c2, elId){
 		let ti = c1
 		let se = c2
 		let ret = '<bok>'
+		let url = "http://testmaskin:1337/bok/" + elId
+
+		console.log("Editing book")
 
 		test = createBookForm()
 		document.getElementById('modalhead').innerHTML = "Rediger"
@@ -124,16 +134,29 @@ function edit(table, c1, c2, elId){
 		test[3].value = se
 
 		test[4].onclick = (event) => {
+			console.log("Sending edit to api")
 			document.getElementById('myModal').style.display = "none";
 			if (test[1].value !== ti) ret += `<tittel>${test[1].value}</tittel>`
 			if (test[3].value !== se) ret += `<forfatterID>${test[3].value}</forfatterID>`
+			ret += '</bok>'
+
 			
+			console.log('ret')
+			console.log(ret)
 
-			xhttp.open("PUT", "http://testmaskin:1337/bok/" + elId)
+			xhttp.open("PUT", url)
 			xhttp.setRequestHeader("Content-Type", "text/xml");
-			xhttp.send(ret + '</bok>')
+			xhttp.send(ret)
 
-			window.location.reload(false);
+			xhttp.onreadystatechange = function() {
+  				if (this.readyState == 4 && this.status == 200) {
+					console.log('---------------refresh page--------------------')
+
+					window.location.reload(false);
+
+  				
+  				}
+  			}
 
 		}
 	}
@@ -161,8 +184,12 @@ function edit(table, c1, c2, elId){
 			xhttp.open("PUT", "http://testmaskin:1337/forfatter/" + elId)
 			xhttp.setRequestHeader("Content-Type", "text/xml");
 			xhttp.send(ret + '</forfatter>')
+			xhttp.onreadystatechange = function() {
+  				if (this.readyState == 4 && this.status == 200) {
+					window.location.reload(false);
+  				}
+  			}
 
-			window.location.reload(false);
 		}
 	}
 }
@@ -223,14 +250,22 @@ function deleteBooks(){
 	xhttp.setRequestHeader("Content-Type", "text/xml");
 	xhttp.send(null)
 	window.bok = {}
-	window.location.reload(false);
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		window.location.reload(false);
+		}
+	}
 }
 function deleteAuthors(){
 	xhttp.open("DELETE", "http://testmaskin:1337/forfatter")
 	xhttp.setRequestHeader("Content-Type", "text/xml");
 	xhttp.send(null)
 	window.forfatter = {}
-	window.location.reload(false);
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		window.location.reload(false);
+		}
+	}
 }
 
 
