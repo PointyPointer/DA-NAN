@@ -14,7 +14,7 @@ print ('<HTML>')
 print ('<HEAD><TITLE>Endre Bok</TITLE></HEAD>')
 print ('<BODY>')
 
-print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
+print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<br>' )
 session_id=False
 if ('HTTP_COOKIE' in environ):
    for cookie in environ['HTTP_COOKIE'].split(';'):
@@ -61,6 +61,11 @@ for bID in bok:
     print (f'<td style = "text-align: center"> {b["forfatterID"]} </td>') 
     print ('</tr>')
 print('</table>')
+
+
+      
+
+
 
 #sokBok = requests.get("http://rest:1337/bok/")
 #print (sokBok.text)

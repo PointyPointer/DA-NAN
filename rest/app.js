@@ -35,7 +35,8 @@ app.use((req,res,next) => {
 // Needed for type checking when inserting data in sqlite3 DB
 // which have no strict typematching
 function checkValue(val, type='string'){
-	if(val && typeof val === 'object' && Array.isArray(val))
+  return true
+  if(val && typeof val === 'object' && Array.isArray(val))
 		return val.every(entry => typeof entry === type || typeof entry === 'number' && Number(entry))
 	
 	else if(val && typeof val === type)

@@ -33,7 +33,7 @@ forfattere = {get_val_from_xml(f, 'forfatterID') :get_val_from_xml(f, 'fornavn')
 print ('<H1> Hater livet </H1>')
 print ('</br>') 
 print ('<h2> Legg til en bok </h2>')
-print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<select name="ForfatterNavn"')
+print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<select name="ForfatterNavn">')
 for fID in forfattere:
     print(f'<option value="{fID}">{forfattere[fID]}</option>')
 print('</select> <input type="submit" value="Legg til" id = "submit" > </form>')
