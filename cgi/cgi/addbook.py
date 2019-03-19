@@ -27,19 +27,6 @@ if ('HTTP_COOKIE' in environ):
 def get_val_from_xml(element, tagname):
     return element.getElementsByTagName(tagname)[0].firstChild.nodeValue
 
-forfattere = parseString(requests.get('http://rest:1337/forfatter').text).getElementsByTagName('query')
-forfattere = {get_val_from_xml(f, 'forfatterID') :get_val_from_xml(f, 'fornavn') +' '+ get_val_from_xml(f, 'etternavn') for f in forfattere } 
-
-print ('<H1> Hater livet </H1>')
-print ('</br>') 
-print ('<h2> Legg til en bok </h2>')
-print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<select name="ForfatterNavn"')
-for fID in forfattere:
-    print(f'<option value="{fID}">{forfattere[fID]}</option>')
-print('</select> <input type="submit" value="Legg til" id = "submit" > </form>')
-print('<H2>Legg til forfatter</H2>')
-print ('<form method="POST"> Fornavn: <input type = "text" name = "ForfatterFornavn" id = "ForfatterFornavn"> <br> Etternavn:<input type = "text" name = "ForfatterEtternavn" id = "ForfatterEtternavn"> Nasjonalitet: <input type = "text" name = "ForfatterNasjon" id = "ForfatterNasjon"> <input type="submit" value="Legg til" id = "submit" > </form>')
-
 form = cgi.FieldStorage()
 xml = False
 url = False
@@ -71,6 +58,21 @@ if session_id and environ['REQUEST_METHOD']=='POST' and url and xml:
     cookies = {'sessionID': session_id}
     r = requests.post(url, data=xml, headers= {'content-type':'text/xml; charset=utf8'}, cookies= cookies)
     print (xml)
+
+forfattere = parseString(requests.get('http://rest:1337/forfatter').text).getElementsByTagName('query')
+forfattere = {get_val_from_xml(f, 'forfatterID') :get_val_from_xml(f, 'fornavn') +' '+ get_val_from_xml(f, 'etternavn') for f in forfattere } 
+
+print ('<H1> Hater livet </H1>')
+print ('</br>') 
+print ('<h2> Legg til en bok </h2>')
+print ('<form method="POST"> Bok Navn: <input type = "text" name = "BokNavn" id = "BokNavn"> <br> Forfatter Navn:<select name="ForfatterNavn">')
+for fID in forfattere:
+    print(f'<option value="{fID}">{forfattere[fID]}</option>')
+print('</select> <input type="submit" value="Legg til" id = "submit" > </form>')
+print('<H2>Legg til forfatter</H2>')
+print ('<form method="POST"> Fornavn: <input type = "text" name = "ForfatterFornavn" id = "ForfatterFornavn"> <br> Etternavn:<input type = "text" name = "ForfatterEtternavn" id = "ForfatterEtternavn"> Nasjonalitet: <input type = "text" name = "ForfatterNasjon" id = "ForfatterNasjon"> <input type="submit" value="Legg til" id = "submit" > </form>')
+
+
 
  
 
