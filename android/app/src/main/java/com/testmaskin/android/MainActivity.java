@@ -18,8 +18,9 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.URLDecoder;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
         String firstName = "Firstname";
         String lastName = "Lastname";
 
-        Log.d("helge", "onCreate: " +  getUsername("sigurd.holm1@gmail.com"));
+        Log.d("username", "onCreate: test");
+
+        Log.d("username", "onCreate: " +  getUsername("sigurd.holm1@gmail.com"));
 
 
         CookieManager.getInstance().setAcceptCookie(true);
