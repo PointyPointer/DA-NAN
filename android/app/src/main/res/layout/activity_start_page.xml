@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
-
+    tools:context=".StartPage">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -32,9 +30,28 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <WebView
-        android:id="@+id/web_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etUri"
+        android:text="@string/defaultUri"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btLibrary" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/login"
+        android:text="@string/btLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/signup"
+        android:text="@string/btSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </android.support.v7.widget.LinearLayoutCompat>

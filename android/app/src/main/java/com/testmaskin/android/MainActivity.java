@@ -12,7 +12,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        String uri = getIntent().getStringExtra("EXTRA_URI");
         String firstName = "Firstname";
         String lastName = "Lastname";
 
@@ -38,25 +43,39 @@ public class MainActivity extends AppCompatActivity {
 
         wv = findViewById(R.id.web_view);
         wv.getSettings().setJavaScriptEnabled(true);
-        wv.loadUrl("http://testmaskin:80/library.html");
+        wv.loadUrl(uri);
         wv.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished (WebView view, String url) {
                 cookies = CookieManager.getInstance().getCookie(url);
-                Cursor contact = getContentResolver().query(ContactsContract.Profile.CONTENT_URI, null, null, null, null);
-
-                Log.d("Contact", "test: " + contact);
 
                 if (CookieManager.getInstance().getCookie(url) != null) {
                     String[] cookieParams = cookies.split(";");
                     String[] cookieValue = cookieParams[1].split("=");
                     cookies = cookieValue[1];
+
+                    try {
+                        cookies = URLDecoder.decode(cookies, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        Log.e("Yourapp", "UnsupportedEncodingException");
+                    }
+
+                    Log.d("mail", cookies);
                 }
+
+//                Cursor emails = getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.ADDRESS + " = " + cookies, null, null);
+//                while (emails.moveToNext()) {
+//                    String emailAddress = emails.getString(
+//                            emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+//
+//                    Log.i("emails", emailAddress);
+//                }
+//                emails.close();
 
                 TextView cookie = findViewById(R.id.toolbar_title);
                 cookie.setText(cookies);
 
-                Log.d("Cookies", "hope: " + cookies);
+                Log.d("Cookies", " " + cookies);
             }
         });
     }
