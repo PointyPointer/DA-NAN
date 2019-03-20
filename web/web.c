@@ -18,21 +18,13 @@
 #define GID 1000
 
 int socketSetup();
-
 int deamonize();
-
 int respond(int, char*, FILE*);
-
 char* getTime();
-
 int parseRequest(int, char*, char*);
-
 int isDir(char*);
-
 int getMime(char*, char*, FILE*);
-
 int logAccess(int, char*, FILE*);
-
 
 int main(int argc, char* argv[]){
 
@@ -103,14 +95,20 @@ int main(int argc, char* argv[]){
 		if(fork()==0){
 			httpMethod = malloc(7);
 			filePath = malloc(1000);
-			
+			// Reads incomming http request from socket and populate httpMethod
+			// and filePath. Only GET method is supported			
 			parseRequest(client_sd, httpMethod, filePath);
 
+			// Try to read file from fs to socket. Gives right http-status if
+			// file not found, unknown mime-type or if file is readable(200).
 			respond(client_sd, filePath, mime);
-
+			
+			//Write log on pages visited
 			logAccess(client_sd, filePath, access);
 
 			// terminate child
+			free(httpMethod);
+			free(filePath);
 			shutdown(client_sd, SHUT_RDWR);
 			exit(0);
 		}
@@ -137,7 +135,7 @@ int socketSetup(){
 		perror(getTime());
 		exit(1);		
 	}
-
+	// Switching user from root to non-privilega user
 	setuid( (uid_t) UID );
 	setgid( (gid_t) GID );
 

@@ -23,6 +23,7 @@
 		</div>
 		<div>Vil du logge ut?</div>
 		<button onclick="logout()">Log ut</button>
+		<button onclick="location.href = '/';">Hjem</button>
 		
 	</div>
 </body>
@@ -47,8 +48,8 @@
 	}
 
 	function login() {
-		var xmlDocument
-		var xhr = new XMLHttpRequest()
+		let xmlDocument
+		let xhr = new XMLHttpRequest()
 		xhr.open("POST","http://testmaskin:1337/login",true)
 		xhr.withCredentials = true
 		xhr.setRequestHeader("Content-type","text/xml")
@@ -67,8 +68,8 @@
 		}
 	}
 	function logout() {
-		var xmlDocument
-		var xhr = new XMLHttpRequest()
+		let xmlDocument
+		let xhr = new XMLHttpRequest()
 		xhr.open("DELETE","http://testmaskin:1337/logout",true)
 		xhr.withCredentials = true
 		xhr.setRequestHeader("Content-type","text/xml")

@@ -241,12 +241,12 @@ app.get('/:table/:id', (req, res) => {
 
 // Check if user is logged in
 app.use((req,res,next) => {
-	let sql = "SELECT brukerID FROM Sesjon WHERE sesjonsID = ?"
+	let sql = "SELECT brukerID FROM Sesjon WHERE sesjonsID = ? AND brukerID = ?"
   
 	if(req.cookies.sessionID){
     let db = new sqlite3.Database('/db/potatoDB.db')
     db.serialize(() => {
-      db.get(sql, [req.cookies.sessionID], (err, row) => {
+      db.get(sql, [req.cookies.sessionID, req.cookies.username], (err, row) => {
         if(row){
           console.log('Innlogget')
           next()

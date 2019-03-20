@@ -6,7 +6,6 @@ import cgitb
 import re
 from os import environ
 from xml.dom.minidom import parseString
-cgitb.enable()
 
 print ('Content-Type: text/html; charset=utf-8\n')
 print ()
@@ -14,14 +13,16 @@ print ('<HTML>')
 print ('<HEAD><TITLE>Endre Bok</TITLE></HEAD>')
 print ('<BODY>')
 
+
+
+print ('<H1> Hovedmeny til DAN-Prosjekt sine cgi filer</H1>')
 print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<br>' )
-session_id=False
+cookies = {}
 if ('HTTP_COOKIE' in environ):
    for cookie in environ['HTTP_COOKIE'].split(';'):
-      (key, value ) = cookie.strip().split('=')
-      print(key,value)
-      if key == "sessionID":
-         session_id = value
+      if '=' in cookie:
+          (key, value ) = cookie.strip().split('=')
+          cookies[key] = value
 
 def get_val_from_xml(element, tagname):
     return element.getElementsByTagName(tagname)[0].firstChild.nodeValue
@@ -29,6 +30,7 @@ def get_val_from_xml(element, tagname):
 
 #potensiellt benytte forms legg til extra rad for submite knapp, maybe en decent workaround
 #select box for slett husk husk
+cgitb.enable()
 form = cgi.FieldStorage()
 if "fput" in form:
     ForfatterFornavn = form.getvalue('fornavn')
@@ -42,9 +44,7 @@ elif "bput" in form:
     xml = f'<bok><tittel>{BokNavn}</tittel><forfatterid>{ForfatterNavn}</forfatterid></bok>'
     url = 'http://rest:1337/bok/' + form.getvalue("bokid")
 
-if session_id and environ['REQUEST_METHOD']=='POST' and url and xml:
-    #xml=f'<bok><tittel>{BokNavn}</tittel><forfatterid>{ForfatterNavn}</forfatterid></bok>'
-    cookies = {'sessionID': session_id}
+if cookies and environ['REQUEST_METHOD']=='POST' and url and xml:
     r = requests.put(url, data=xml, headers= {'content-type':'text/xml; charset=utf8'}, cookies= cookies)
     print (xml)
 

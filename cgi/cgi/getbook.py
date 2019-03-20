@@ -12,10 +12,8 @@ print ()
 print ('<HTML>')
 print ('<HEAD><TITLE>Hovedmeny</TITLE></HEAD>')
 print ('<BODY>')
-
+print ('<H1> Hovedmeny til DAN-Prosjekt sine cgi filer</H1>')
 print( '<br>'.join([f'<a href="{f}">{f}</a>' for f in os.listdir() if f.endswith('.py')]) + '<BR>' )
-print ('<H1> Hovedmeny til potetgreia </H1>')
-print ('</br>') 
 print ('<h2> Hent en post </h2>')
 print ('<form method= "GET"> BokID: <input type="text" name="BokID"> <input type="submit" value="Hent post">')
 print ('<input type = "radio" name = "sokevalgA" value = "Bok" /> BokID')
@@ -35,10 +33,6 @@ elif form.getvalue('sokevalgB'):
     forfatter = urlstring[urlstring.find("=")+1: urlstring.find("&")]
     sokForfatter = requests.get("http://rest:1337/forfatter/" + str(forfatter))
     print(sokForfatter.text)
-else : 
-    print('velg pls')
- 
-
 
 print ("</BODY></HTML>")
 

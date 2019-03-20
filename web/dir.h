@@ -51,17 +51,6 @@ int writeA(int sd, char* temp, char* filePath){
 
   write(sd, buff, strlen(buff));
 
-  // strcpy(buff, "<");
-  // strcat(buff, tagName);
-  // strcat(buff, ">");
-
-  // strcat(buff, content);
-  // strcat(buff, "</");
-  // strcat(buff, tagName);
-  // strcat(buff, ">");
-
-  // write(sd, buff, strlen(buff));
-
   free(buff);
   return 0;
 }
@@ -77,7 +66,7 @@ void writeDirList(int sd, char *filsti){
   if ((dir = opendir (filsti)) == NULL) {
     perror (""); exit(1); }
 
-  chroot("/var/www");
+  // chroot("/var/www");
 
   chdir(filsti);
 
@@ -87,11 +76,7 @@ void writeDirList(int sd, char *filsti){
   strcpy(buff, "Katalogen :");
   strcat(buff, filsti);
   writeTag(sd, "h1", buff);
-
-
-  // write(sd, "------------------------------------\n");         
-  // write(sd, "Rettigheter\tUID\tGID\tNavn\n");
-  // write(sd, "------------------------------------\n");
+  write(sd, "<div style=\"margin: 10px;\">", 27);
   write(sd, "<table>", 7);
   
   write(sd, "<tr>", 4);
@@ -114,25 +99,13 @@ void writeDirList(int sd, char *filsti){
     writeTag(sd, "td", temp);
     sprintf(temp, "%d",   stat_buffer.st_gid);
     writeTag(sd, "td", temp);
-    
 
     sprintf(temp, "%s",   ent->d_name);
 
     writeA(sd, temp, filsti);
-    
-
-    // writeTag(sd, "td", temp);
-    // write(sd, "</a>", 4);
-
-    // write(sd, "</tr>", 5);       
-
-    // writeTag(sd, "%o\t\t", stat_buffer.st_mode & 0777 );      
-    // write(sd, "%d\t",   stat_buffer.st_uid);
-    // write(sd, "%d\t",   stat_buffer.st_gid);
-    // write(sd, "%s\n",   ent->d_name);
-
   }
-  write(sd, "</table>", 8);       
+  write(sd, "</table>", 8);    
+  write(sd, "</div>", 6);    
 
   free(buff);
   free(temp);
