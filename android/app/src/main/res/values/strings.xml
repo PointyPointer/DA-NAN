@@ -3,6 +3,6 @@
     <string name="btLibrary">Library</string>
     <string name="btLogin">Login</string>
     <string name="btSignup">Sign up</string>
-    <string name="toolbar_title">No information now</string>
+    <string name="toolbar_title">No user information</string>
     <string name="defaultUri">http://testmaskin/</string>
 </resources>
