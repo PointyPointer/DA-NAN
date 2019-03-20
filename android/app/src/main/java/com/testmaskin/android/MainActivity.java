@@ -70,11 +70,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished (WebView view, String url) {
                 cookies = CookieManager.getInstance().getCookie(url);
+                Log.d("raw cookie", ""+cookies);
 
                 if (CookieManager.getInstance().getCookie(url) != null) {
                     String[] cookieParams = cookies.split(";");
                     String[] cookieValue = cookieParams[1].split("=");
                     cookies = cookieValue[1];
+                    Log.d("mod cookie", ""+cookies);
 
                     try {
                         cookies = URLDecoder.decode(cookies, "UTF-8");
@@ -82,17 +84,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("Yourapp", "UnsupportedEncodingException");
                     }
 
-                    Log.d("mail", cookies);
+                    cookies = getUsername(cookies);
+                    Log.d("mail", ""+cookies);
                 }
-
-//                Cursor emails = getContentResolver().query(ContactsContract.Data.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.ADDRESS + " = " + cookies, null, null);
-//                while (emails.moveToNext()) {
-//                    String emailAddress = emails.getString(
-//                            emails.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-//
-//                    Log.i("emails", emailAddress);
-//                }
-//                emails.close();
 
                 TextView cookie = findViewById(R.id.toolbar_title);
                 cookie.setText(cookies);
