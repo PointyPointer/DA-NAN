@@ -23,7 +23,7 @@ public class StartPage extends AppCompatActivity {
 
         defaulturi = findViewById(R.id.etUri);
 
-
+//      Find button and set URI to go to in the next activity
         btLibrary = findViewById(R.id.library);
         btLibrary.setOnClickListener(new View.OnClickListener(){
             @Override
