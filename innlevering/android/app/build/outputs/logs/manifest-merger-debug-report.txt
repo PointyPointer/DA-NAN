@@ -1,0 +1,168 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/c29a61dbee7e1884f71bd0b0b57cd457/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /home/pointy/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/a69342c8654084c45338f57be30f1853/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:support-fragment:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-fragment-28.0.0.aar/d12f4c84d9150c721a3181fa0fe950e9/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-28.0.0.aar/7aae3201c684a5aa50809b92717f521f/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-ui-28.0.0.aar/076678f20632d65764fc1a4d2b85b676/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/a364a9cdcfd187cdd488ab83398c2ee2/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-28.0.0.aar/994e1fe949613d0806e437204b196e8d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/56e51fb4d9fd2cd68be5748e0ceeaeba/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewpager-28.0.0.aar/fb51e98bdfc045bf39636735c6a33f79/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-28.0.0.aar/83e5740c16a7b18353b9a9c5d783940b/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/drawerlayout-28.0.0.aar/4b615d741d6cba4a30836ec6e3759141/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-28.0.0.aar/39776b9871ea0313a4210e165c9a0836/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/7173b3dfd94632505fe564ce7bff7a40/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/e6fda6e63245adee7013a59cb10a0d95/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/c4427cb5ce6f8bcbd373bd593d200e22/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/07e7fd10cc3726dd31d6af31f69402d0/AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/ddee8bc86261ba7e1535766625ad4683/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/f4f4571933396dc0e77f1e560262f691/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/documentfile-28.0.0.aar/53f4035ad1292cd8c64beb03d879d66d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-28.0.0.aar/011fbfe35629b4a46400802de996960f/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/print-28.0.0.aar/1807f7bb9697ff4cf2cf68d48022ecb9/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.1.aar/037c5a97adf54832ee0b4b1e52acb418/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/d752f1a8bc112887b207a2764263f5e1/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/76abac5b6a96135034113a77ddfa4ba9/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/1bc21735ef1f4f203c709ed6d05c3449/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/interpolator-28.0.0.aar/88ddaa5e22847f057054452b612efdde/AndroidManifest.xml:17:1-22:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+	package
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:3:5-37
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:1-27:12
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_CONTACTS
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:5:5-72
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:5:22-69
+uses-permission#android.permission.INTERNET
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:6:5-67
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:6:22-64
+application
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:8:5-25:19
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /home/pointy/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/a69342c8654084c45338f57be30f1853/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /home/pointy/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/a69342c8654084c45338f57be30f1853/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/07e7fd10cc3726dd31d6af31f69402d0/AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/07e7fd10cc3726dd31d6af31f69402d0/AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:22:18-91
+	android:supportsRtl
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:13:9-35
+	android:label
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:11:9-41
+	android:roundIcon
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:12:9-54
+	android:icon
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:10:9-43
+	android:allowBackup
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:9:9-35
+	android:theme
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:14:9-40
+	android:usesCleartextTraffic
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:15:9-44
+activity#com.testmaskin.android.StartPage
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:16:9-22:20
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:16:19-44
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:17:13-21:29
+action#android.intent.action.MAIN
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:18:17-69
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:18:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:20:17-77
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:20:27-74
+activity#com.testmaskin.android.MainActivity
+ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:23:9-24:20
+	android:name
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml:23:19-47
+uses-sdk
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+MERGED from [com.android.support:appcompat-v7:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/c29a61dbee7e1884f71bd0b0b57cd457/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/c29a61dbee7e1884f71bd0b0b57cd457/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /home/pointy/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/a69342c8654084c45338f57be30f1853/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /home/pointy/.gradle/caches/transforms-1/files-1.1/constraint-layout-1.1.3.aar/a69342c8654084c45338f57be30f1853/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:support-fragment:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-fragment-28.0.0.aar/d12f4c84d9150c721a3181fa0fe950e9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-fragment-28.0.0.aar/d12f4c84d9150c721a3181fa0fe950e9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-28.0.0.aar/7aae3201c684a5aa50809b92717f521f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-28.0.0.aar/7aae3201c684a5aa50809b92717f521f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-ui-28.0.0.aar/076678f20632d65764fc1a4d2b85b676/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-ui-28.0.0.aar/076678f20632d65764fc1a4d2b85b676/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/a364a9cdcfd187cdd488ab83398c2ee2/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/a364a9cdcfd187cdd488ab83398c2ee2/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-28.0.0.aar/994e1fe949613d0806e437204b196e8d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-28.0.0.aar/994e1fe949613d0806e437204b196e8d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/56e51fb4d9fd2cd68be5748e0ceeaeba/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/56e51fb4d9fd2cd68be5748e0ceeaeba/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewpager-28.0.0.aar/fb51e98bdfc045bf39636735c6a33f79/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewpager-28.0.0.aar/fb51e98bdfc045bf39636735c6a33f79/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-28.0.0.aar/83e5740c16a7b18353b9a9c5d783940b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-28.0.0.aar/83e5740c16a7b18353b9a9c5d783940b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/drawerlayout-28.0.0.aar/4b615d741d6cba4a30836ec6e3759141/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/drawerlayout-28.0.0.aar/4b615d741d6cba4a30836ec6e3759141/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-28.0.0.aar/39776b9871ea0313a4210e165c9a0836/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-28.0.0.aar/39776b9871ea0313a4210e165c9a0836/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/7173b3dfd94632505fe564ce7bff7a40/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/7173b3dfd94632505fe564ce7bff7a40/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/e6fda6e63245adee7013a59cb10a0d95/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/e6fda6e63245adee7013a59cb10a0d95/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/c4427cb5ce6f8bcbd373bd593d200e22/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/c4427cb5ce6f8bcbd373bd593d200e22/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/cf6702af9e9c853428d975b2e490fa59/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/07e7fd10cc3726dd31d6af31f69402d0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/07e7fd10cc3726dd31d6af31f69402d0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/ddee8bc86261ba7e1535766625ad4683/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/ddee8bc86261ba7e1535766625ad4683/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/f4f4571933396dc0e77f1e560262f691/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/f4f4571933396dc0e77f1e560262f691/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/documentfile-28.0.0.aar/53f4035ad1292cd8c64beb03d879d66d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/documentfile-28.0.0.aar/53f4035ad1292cd8c64beb03d879d66d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-28.0.0.aar/011fbfe35629b4a46400802de996960f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-28.0.0.aar/011fbfe35629b4a46400802de996960f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/print-28.0.0.aar/1807f7bb9697ff4cf2cf68d48022ecb9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/print-28.0.0.aar/1807f7bb9697ff4cf2cf68d48022ecb9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.1.aar/037c5a97adf54832ee0b4b1e52acb418/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.1.aar/037c5a97adf54832ee0b4b1e52acb418/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/d752f1a8bc112887b207a2764263f5e1/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/d752f1a8bc112887b207a2764263f5e1/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/76abac5b6a96135034113a77ddfa4ba9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/76abac5b6a96135034113a77ddfa4ba9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/1bc21735ef1f4f203c709ed6d05c3449/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /home/pointy/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/1bc21735ef1f4f203c709ed6d05c3449/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/interpolator-28.0.0.aar/88ddaa5e22847f057054452b612efdde/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /home/pointy/.gradle/caches/transforms-1/files-1.1/interpolator-28.0.0.aar/88ddaa5e22847f057054452b612efdde/AndroidManifest.xml:20:5-44
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/pointy/skole/semester6/DA-NAN3000/DA-NAN/android/app/src/main/AndroidManifest.xml

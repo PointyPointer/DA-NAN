@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  web:
+    build: ./c
+    volumes:
+     - ./c/www:/var/www
+     - ./c/logs:/var/log
+    ports:
+      - 80:80
+  
+  cgi:
+    build: ./apache
+    volumes:
+     - ./apache/cgi:/usr/local/apache2/cgi-bin/
+    ports:
+      - 8080:80
+
+  rest:
+    build: ./express
+    volumes:
+     - ./express/db:/db/
+    ports:
+      - 1337:1337

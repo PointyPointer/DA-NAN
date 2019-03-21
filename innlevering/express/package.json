@@ -1,0 +1,37 @@
+{
+  "name": "potato-api",
+  "version": "1.0.0",
+  "description": "Potatoes are awful to run a server on",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PointyPointer/DA-NAN.git"
+  },
+  "keywords": [
+    "potato",
+    "rest",
+    "api",
+    "expressjs",
+    "sqlite"
+  ],
+  "author": "Magnus Haukebøe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PointyPointer/DA-NAN/issues"
+  },
+  "homepage": "https://github.com/PointyPointer/DA-NAN#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-xml-bodyparser": "^0.3.0",
+    "object-to-xml": "^2.0.0",
+    "python": "0.0.4",
+    "sqlite3": "^4.0.6",
+    "xml2js": "^0.4.19",
+    "cookie-parser": "^1.4.4"
+  }
+}

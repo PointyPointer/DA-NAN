@@ -1,0 +1,88 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<title>Log in</title>
+	<link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body onload="cookie()">
+
+	<h1>Welcome to PotatoDB :)</h1>
+	<div id="login">
+		Brukernavn<br>
+		<input id="un"type="text" name="userName"><br>
+		Passord<br>
+		<input id="pw"type="password" name="passwd"><br>
+
+		<button onclick="login()">Login</button>
+		<button onclick="signup()">Lag bruker</button><br>
+		<div id="errormsg" style="color:red"></div>
+	</div>
+	<div id="logout" style="display:none">
+		<div>Innlogget bruker:
+			<b id="username"></b>
+		</div>
+		<div>Vil du logge ut?</div>
+		<button onclick="logout()">Log ut</button>
+		<button onclick="location.href = '/';">Hjem</button>
+		
+	</div>
+</body>
+<script>
+	function cookie() {
+		let username, sessionID
+
+		document.cookie.split(';').forEach((cookie) => {
+			let [key,value] = cookie.split('=').map(a => a.trim())
+			if(key === 'sessionID'){
+				document.getElementById("login").style = "display:none"
+				document.getElementById("logout").style = "display:block"
+			} 
+			if(key=== 'username'){
+				document.getElementById("username").innerHTML = value
+			}
+		})
+	}
+
+	function signup() {
+		window.location.href = "/signup.html"
+	}
+
+	function login() {
+		let xmlDocument
+		let xhr = new XMLHttpRequest()
+		xhr.open("POST","http://testmaskin:1337/login",true)
+		xhr.withCredentials = true
+		xhr.setRequestHeader("Content-type","text/xml")
+
+		username = document.getElementById("un").value
+		passwd = document.getElementById("pw").value
+		xmlDocument = "<user><username>" + username + "</username><password>" + passwd + "</password></user>"
+		xhr.send(xmlDocument)
+		xhr.onreadystatechange = function() { 
+			if (xhr.readyState === 4 && xhr.status === 200) {
+        		window.location.href = "/index.html"
+			}
+			else if(xhr.readyState === 4)
+				document.getElementById("errormsg").innerHTML = "Feil brukernavn/passord"
+
+		}
+	}
+	function logout() {
+		let xmlDocument
+		let xhr = new XMLHttpRequest()
+		xhr.open("DELETE","http://testmaskin:1337/logout",true)
+		xhr.withCredentials = true
+		xhr.setRequestHeader("Content-type","text/xml")
+
+		username = document.getElementById("un").value
+		passwd = document.getElementById("pw").value
+		xmlDocument = "<user><username>" + username + "</username><password>" + passwd + "</password></user>"
+		xhr.send(null)
+		xhr.onreadystatechange = function() { 
+			if (xhr.readyState === 4 && xhr.status === 200) {
+        		window.location.href = "/index.html"
+			}
+		}
+	}
+</script>
+</html> 
